@@ -17,26 +17,23 @@ import javax.swing.JButton;
   */
 
 //JFrame class, actual logic done in here
-public class Node extends JPanel implements ActionListener, Serializeable{
+public class Node extends JPanel implements ActionListener{
   private int number;             //Test to store value
   
-  private GridLayout layoutIn;    //Layout for user interface
+  private GridLayout layout;    //Layout for user interface
   
   private JPanel inputArea;       //User interface
   private JTextField name;        //Greeting
   private JTextField insertField; //User input field
   
-  public GuessingGameFrame(){
-    layoutOut = new GridLayout(2, 1);
-    setLayout(layoutOut);
-    
-    greetingLabel = new JLabel();
-    add(greetingLabel);
+  public Node(){
+    layout = new GridLayout(2, 1);
+    setLayout(layout);
     
     //Set up user interactibles
     inputArea = new JPanel();
-    layoutIn = new GridLayout(0, 3);
-    inputArea.setLayout(layoutIn);
+    layout = new GridLayout(0, 3);
+    inputArea.setLayout(layout);
     
     //Build components
     name = new JTextField(10);
