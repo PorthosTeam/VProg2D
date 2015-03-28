@@ -1,3 +1,5 @@
+package com.mygdx.game;
+
 import java.awt.event.*;
 import java.awt.GridLayout;
 import java.awt.Color;

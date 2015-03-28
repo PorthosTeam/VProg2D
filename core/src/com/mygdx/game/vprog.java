@@ -15,6 +15,7 @@ public class vprog extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
+		Gdx.app.log("Test", "Testing");
 	}
 
 	@Override
