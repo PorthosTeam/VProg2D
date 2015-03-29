@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.mygdx.game;
 
 /**
@@ -16,13 +13,13 @@ public class JDK {
 	private String version;
 	private String directory;
 
-	/**
-	 * 
-	 */
-	public JDK() {
-		// 
+	// Init JDK variables
+	public JDK(String _directory, String _version) {
+		directory = _directory;
+		version = _version;
 	}
 	
+	// Getters/Setters
 	public void setVersion(String _version) {
 		version = _version;
 	}

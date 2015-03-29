@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.mygdx.game;
 
 import java.util.ArrayList;
@@ -16,15 +13,16 @@ import java.util.ArrayList;
 public class User {
 
 	private String name;
-	private ArrayList projects;
+	private ArrayList<Project> projects;
 
-	/**
-	 * 
-	 */
-	public User() {
-		//
+	// Init user
+	public User(String _name) {
+		name = _name;
 	}
+	
+	public User() {}
 
+	// Getters/Setters
 	public void setName(String _name) {
 		name = _name;
 	}
@@ -38,7 +36,7 @@ public class User {
 	}
 
 	/* returns the actual Projects and not a copy */
-	public ArrayList getProjects() {
+	public ArrayList<Project> getProjects() {
 		return projects;
 	}
 
