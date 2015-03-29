@@ -13,7 +13,7 @@ import java.awt.*;
  *              and the associated JDK for the the game.
  * 
  * @author Trevor Richardson
- * @date Mar. 22th 2015
+ * @date Mar. 22 2015
  * @module CreateProject
  */
 
@@ -49,6 +49,7 @@ public class Project extends JPanel implements ActionListener {
 		displayProjDir
 				.setToolTipText("Enter the folder you wish to store the project in.");
 		add(displayProjDir);
+		displayProjDir.setEditable(false);
 		projDir = new JButton("Select Folder");
 		// Button listener for directory selection
 		projDir.addActionListener(new ActionListener() {

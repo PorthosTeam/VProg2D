@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import java.awt.FlowLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -15,7 +14,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class vprog extends ApplicationAdapter {
 	
 	// Test create project module
-	private boolean CREATE_DEBUG = true;
+	private boolean CREATE_DEBUG = false;
 	
 	public static int WIDTH = 800, HEIGHT = 600;
 	SpriteBatch batch;

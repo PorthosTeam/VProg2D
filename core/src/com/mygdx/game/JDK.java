@@ -5,7 +5,7 @@ package com.mygdx.game;
  *              Java Development Kit for compilation and execution.
  * 
  * @author Trevor Richardson
- * @date Mar. 22th 2015
+ * @date Mar. 22 2015
  * @module CreateProject
  */
 public class JDK {

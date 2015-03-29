@@ -7,7 +7,7 @@ import java.util.ArrayList;
  *              the User.
  * 
  * @author Trevor Richardson
- * @date Mar. 22th 2015
+ * @date Mar. 22 2015
  * @module CreateProject
  */
 public class User {
