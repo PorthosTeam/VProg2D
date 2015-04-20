@@ -3,6 +3,7 @@ package com.mygdx.game.desktop;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mygdx.game.vprog;
+import com.mygdx.game.JMenuBuilder;
 
 // These modules are needed to ascertain available screen "real estate".
 import java.awt.Rectangle;
@@ -27,6 +28,8 @@ public class DesktopLauncher {
         // open windows bigger than these bounds if we can avoid it).
         Rectangle screenBounds = getWindowBounds();
         
+        // This is currently just Alex testing his UI work. This will definitely
+        // not be exactly how it's done later.
         openTestWindow(screenBounds);
         
         LwjglApplicationConfiguration config
@@ -79,9 +82,9 @@ public class DesktopLauncher {
     private static void openTestWindow(Rectangle bounds) {
         JMenuBar menuBar = new JMenuBar();
         
-        menuBar.add(buildMenu_file());
-        menuBar.add(buildMenu_project());
-        menuBar.add(buildMenu_help());
+        menuBar.add(JMenuBuilder.buildFileMenu());
+        menuBar.add(JMenuBuilder.buildProjectMenu());
+        menuBar.add(JMenuBuilder.buildHelpMenu());
         
         JFrame wrapperFrame = new JFrame("VProg2D Wrapper Frame");
         
@@ -99,58 +102,7 @@ public class DesktopLauncher {
         
         wrapperFrame.setVisible(true);
     }
-    
-    private static JMenuItem newJMenuItemWithIcon
-    (String name, String iconFilename) {
-        ImageIcon icon = new ImageIcon(iconFilename);
-        JMenuItem item = new JMenuItem(name);
-        item.setIcon(icon);
-        return item;
-    }
-    
-    // These 'buildMenu_*' functions could/should probably be refactored into
-    // some sort of less-programmatic way of generating the menus. But it's not
-    // a priority right now.
-    
-    private static JMenu buildMenu_file() {
-        JMenu menu = new JMenu("File");
-        
-        // "new_" is icky, but "new" is a reserved keyword.
-        JMenuItem new_ = newJMenuItemWithIcon("New", "createProject_small.png");
-        JMenuItem open = newJMenuItemWithIcon("Open", "loadProject_small.png");
-        JMenuItem save = newJMenuItemWithIcon("Save", "saveProject_small.png");
-        
-        menu.add(new_);
-        menu.add(open);
-        menu.add(save);
-        
-        return menu;
-    }
-    
-    private static JMenu buildMenu_project() {
-        JMenu menu = new JMenu("Project");
-        
-        JMenuItem build = newJMenuItemWithIcon("Build", "construct_small.png");
-        JMenuItem test = newJMenuItemWithIcon("Test", "test_small.png");
-        JMenuItem run = newJMenuItemWithIcon("Run", "runProgram_small.png");
-        
-        menu.add(build);
-        menu.add(test);
-        menu.add(run);
-        
-        return menu;
-    }
-    
-    private static JMenu buildMenu_help() {
-        JMenu menu = new JMenu("Help");
-        
-        JMenuItem about = new JMenuItem("About");
-        
-        menu.add(about);
-        
-        return menu;
-    }
-    
+
     public static void main (String[] arg) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
