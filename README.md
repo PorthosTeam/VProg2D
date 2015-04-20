@@ -14,6 +14,6 @@ E to spawn an enemy on the ground under the mouse,
 B for a text box because why not. 
 
 Lots of this needs to be hooked into the UI, among 
-other things. 
-- Trevor
+other things. - Trevor
+ 
 ------
