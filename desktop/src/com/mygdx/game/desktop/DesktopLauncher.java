@@ -5,16 +5,28 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mygdx.game.vprog;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 public class DesktopLauncher {
     // Swing is not thread safe, so it is "good practice" to move all Swing
     // commands out of main, into a function that is run by the event dispatcher
     // thread once it's actually safe.
-    public static void startSwingGUI() {
+    private static void startSwingGUI() {
+        openTestWindow(50, 50, 200, 200);
+    }
+    
+    private static void getScreenBounds() {}
+    
+    private static void openTestWindow(int x, int y, int width, int height) {
+        String labelText = x + " " + y + " " + width + " " + height;
+        JLabel testJLabel = new JLabel(labelText);
+	
         JFrame testJFrame = new JFrame("Test JFrame");
-        testJFrame.setBounds(0, 0, 200, 50);
+        testJFrame.setBounds(x, y, width, height);
         testJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+	testJFrame.getContentPane().add(testJLabel);
         testJFrame.setVisible(true);
     }
     
@@ -30,6 +42,6 @@ public class DesktopLauncher {
         config.height = 720;
         config.width = 1280;
         config.resizable = false;
-        new LwjglApplication(new vprog(), config);
+        //new LwjglApplication(new vprog(), config);
     }
 }
