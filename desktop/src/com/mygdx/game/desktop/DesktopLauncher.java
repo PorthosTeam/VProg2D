@@ -80,6 +80,7 @@ public class DesktopLauncher {
         JMenuBar menuBar = new JMenuBar();
         
         menuBar.add(buildMenu_file());
+        menuBar.add(buildMenu_project());
         menuBar.add(buildMenu_help());
         
         JFrame wrapperFrame = new JFrame("VProg2D Wrapper Frame");
@@ -99,6 +100,14 @@ public class DesktopLauncher {
         wrapperFrame.setVisible(true);
     }
     
+    private static JMenuItem newJMenuItemWithIcon
+    (String name, String iconFilename) {
+        ImageIcon icon = new ImageIcon(iconFilename);
+        JMenuItem item = new JMenuItem(name);
+        item.setIcon(icon);
+        return item;
+    }
+    
     // These 'buildMenu_*' functions could/should probably be refactored into
     // some sort of less-programmatic way of generating the menus. But it's not
     // a priority right now.
@@ -106,22 +115,28 @@ public class DesktopLauncher {
     private static JMenu buildMenu_file() {
         JMenu menu = new JMenu("File");
         
-        ImageIcon newIcon = new ImageIcon("createProject_small.png");
         // "new_" is icky, but "new" is a reserved keyword.
-        JMenuItem new_ = new JMenuItem("New");
-        new_.setIcon(newIcon);
-        
-        ImageIcon openIcon = new ImageIcon("loadProject_small.png");
-        JMenuItem open = new JMenuItem("Open");
-        open.setIcon(openIcon);
-        
-        ImageIcon saveIcon = new ImageIcon("saveProject_small.png");
-        JMenuItem save = new JMenuItem("Save");
-        save.setIcon(saveIcon);
+        JMenuItem new_ = newJMenuItemWithIcon("New", "createProject_small.png");
+        JMenuItem open = newJMenuItemWithIcon("Open", "loadProject_small.png");
+        JMenuItem save = newJMenuItemWithIcon("Save", "saveProject_small.png");
         
         menu.add(new_);
         menu.add(open);
         menu.add(save);
+        
+        return menu;
+    }
+    
+    private static JMenu buildMenu_project() {
+        JMenu menu = new JMenu("Project");
+        
+        JMenuItem build = newJMenuItemWithIcon("Build", "construct_small.png");
+        JMenuItem test = newJMenuItemWithIcon("Test", "test_small.png");
+        JMenuItem run = newJMenuItemWithIcon("Run", "runProgram_small.png");
+        
+        menu.add(build);
+        menu.add(test);
+        menu.add(run);
         
         return menu;
     }
