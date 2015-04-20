@@ -5,12 +5,9 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mygdx.game.vprog;
 import com.mygdx.game.JMenuBuilder;
 
-// These modules are needed to ascertain available screen "real estate".
+// This is for grabbing available space for our window(s) on the screen.
+import com.mygdx.game.WindowBoundsChecker;
 import java.awt.Rectangle;
-import java.awt.Insets;
-import java.awt.GraphicsEnvironment;
-import java.awt.GraphicsConfiguration;
-import java.awt.Toolkit;
 
 // These modules are Alex experimenting with a UI. All of this UI work might be
 // better off being moved into the Core, rather than Desktop, sub-project.
@@ -26,7 +23,7 @@ public class DesktopLauncher {
         // Don't want any of this fixed-size stuff if we can avoid it, so we get
         // the screen area available to us for our windows (we don't want to
         // open windows bigger than these bounds if we can avoid it).
-        Rectangle screenBounds = getWindowBounds();
+        Rectangle screenBounds = WindowBoundsChecker.getWindowBounds();
         
         // This is currently just Alex testing his UI work. This will definitely
         // not be exactly how it's done later.
@@ -41,42 +38,6 @@ public class DesktopLauncher {
         config.height = screenBounds.height;
         config.resizable = true;
         new LwjglApplication(new vprog(), config);
-    }
-    
-    private static Rectangle getWindowBounds() {
-        // First grab the overall screen graphics configuration...
-        GraphicsConfiguration graphicsConf
-            = GraphicsEnvironment.getLocalGraphicsEnvironment()
-              .getDefaultScreenDevice().getDefaultConfiguration();
-        
-        // ..then by grabbing the 'real' screen bounds (e.g. physical)...
-        Rectangle screenBounds = getScreenBounds(graphicsConf);
-        
-        // ..then getting the "insets"...
-        Insets screenInsets = getScreenInsets(graphicsConf);
-        
-        // ..and finally calculating the effective screen bounds based on the
-        // physical bounds, minus the insets.
-        return calculateInsetBounds(screenBounds, screenInsets);
-    }
-    
-    private static Rectangle getScreenBounds
-    (GraphicsConfiguration graphicsConf) {
-        return graphicsConf.getBounds();
-    }
-    
-    private static Insets getScreenInsets(GraphicsConfiguration graphicsConf) {
-        return Toolkit.getDefaultToolkit().getScreenInsets(graphicsConf);
-    }
-    
-    private static Rectangle calculateInsetBounds
-    (Rectangle bounds, Insets margin) {
-        Rectangle insetBounds = new Rectangle();
-        insetBounds.x = bounds.x + margin.left;
-        insetBounds.y = bounds.y + margin.top;
-        insetBounds.width = bounds.width - margin.left - margin.right;
-        insetBounds.height = bounds.height - margin.top - margin.bottom;
-        return insetBounds;
     }
     
     private static void openTestWindow(Rectangle bounds) {
