@@ -37,6 +37,7 @@ public class DesktopLauncher {
         config.width = screenBounds.width;
         config.height = screenBounds.height;
         config.resizable = true;
+        config.allowSoftwareMode = true;
         new LwjglApplication(new vprog(), config);
     }
     
