@@ -23,8 +23,19 @@ public class DesktopLauncher {
         // Don't want any of this fixed-size stuff if we can avoid it, so we get
         // the screen area available to us for our windows (we don't want to
         // open windows bigger than these bounds if we can avoid it).
-	Rectangle screenBounds = getWindowBounds();
-        openTestWindow(screenBounds);
+        Rectangle screenBounds = getWindowBounds();
+        
+        //openTestWindow(screenBounds);
+        
+        LwjglApplicationConfiguration config
+            = new LwjglApplicationConfiguration();
+        config.title = "VProg2D";
+        config.x = screenBounds.x;
+        config.y = screenBounds.y;
+        config.width = screenBounds.width;
+        config.height = screenBounds.height;
+        config.resizable = false;
+        new LwjglApplication(new vprog(), config);
     }
     
     private static Rectangle getWindowBounds() {
@@ -32,7 +43,7 @@ public class DesktopLauncher {
         GraphicsConfiguration graphicsConf
             = GraphicsEnvironment.getLocalGraphicsEnvironment()
               .getDefaultScreenDevice().getDefaultConfiguration();
-	
+        
         // ..then by grabbing the 'real' screen bounds (e.g. physical)...
         Rectangle screenBounds = getScreenBounds(graphicsConf);
         
@@ -41,7 +52,7 @@ public class DesktopLauncher {
         
         // ..and finally calculating the effective screen bounds based on the
         // physical bounds, minus the insets.
-	return calculateInsetBounds(screenBounds, screenInsets);
+        return calculateInsetBounds(screenBounds, screenInsets);
     }
     
     private static Rectangle getScreenBounds
@@ -82,12 +93,5 @@ public class DesktopLauncher {
                 startSwingGUI();
             }
         });
-        LwjglApplicationConfiguration config
-            = new LwjglApplicationConfiguration();
-        config.title = "VProg2D";
-        config.height = 720;
-        config.width = 1280;
-        config.resizable = false;
-        //new LwjglApplication(new vprog(), config);
     }
 }
