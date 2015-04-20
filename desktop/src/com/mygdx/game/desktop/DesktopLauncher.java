@@ -13,6 +13,10 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JPopupMenu;
+import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
 public class DesktopLauncher {
@@ -25,7 +29,7 @@ public class DesktopLauncher {
         // open windows bigger than these bounds if we can avoid it).
         Rectangle screenBounds = getWindowBounds();
         
-        //openTestWindow(screenBounds);
+        openTestWindow(screenBounds);
         
         LwjglApplicationConfiguration config
             = new LwjglApplicationConfiguration();
@@ -34,7 +38,7 @@ public class DesktopLauncher {
         config.y = screenBounds.y;
         config.width = screenBounds.width;
         config.height = screenBounds.height;
-        config.resizable = false;
+        config.resizable = true;
         new LwjglApplication(new vprog(), config);
     }
     
@@ -75,16 +79,37 @@ public class DesktopLauncher {
     }
     
     private static void openTestWindow(Rectangle bounds) {
-        String labelText = bounds.x + " " + bounds.y + " " + bounds.width + " "
-            + bounds.height;
-        JLabel testJLabel = new JLabel(labelText);
+        JMenuBar menuBar = new JMenuBar();
         
-        JFrame testJFrame = new JFrame("Test JFrame");
-        testJFrame.setBounds(bounds);
-        testJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JMenu menuFile = new JMenu("File");
+        JMenu menuHelp = new JMenu("Help");
         
-        testJFrame.getContentPane().add(testJLabel);
-        testJFrame.setVisible(true);
+        JPopupMenu menuPopupFile = new JPopupMenu();
+        JPopupMenu menuPopupHelp = new JPopupMenu();
+        
+        JMenuItem testJMenuItem1 = new JMenuItem("item1");
+        JMenuItem testJMenuItem2 = new JMenuItem("item2");
+        
+        menuPopupFile.add(testJMenuItem1);
+        menuPopupHelp.add(testJMenuItem2);
+        
+        menuFile.add(menuPopupFile);
+        menuHelp.add(menuPopupHelp);
+        
+        menuBar.add(menuFile);
+        menuBar.add(menuHelp);
+        
+        JFrame wrapperFrame = new JFrame("VProg2D Wrapper Frame");
+        
+        wrapperFrame.setBounds(bounds);
+        wrapperFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        wrapperFrame.getContentPane().add(menuBar);
+        
+        JLabel testPadding = new JLabel("text");
+        wrapperFrame.getContentPane().add(testPadding);
+
+        wrapperFrame.setVisible(true);
     }
     
     public static void main (String[] arg) {
