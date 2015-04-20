@@ -79,17 +79,8 @@ public class DesktopLauncher {
     private static void openTestWindow(Rectangle bounds) {
         JMenuBar menuBar = new JMenuBar();
         
-        JMenu menuFile = new JMenu("File");
-        JMenu menuHelp = new JMenu("Help");
-        
-        JMenuItem testJMenuItem1 = new JMenuItem("item1");
-        JMenuItem testJMenuItem2 = new JMenuItem("item2");
-        
-        menuFile.add(testJMenuItem1);
-        menuHelp.add(testJMenuItem2);
-        
-        menuBar.add(menuFile);
-        menuBar.add(menuHelp);
+        menuBar.add(buildMenu_file());
+        menuBar.add(buildMenu_help());
         
         JFrame wrapperFrame = new JFrame("VProg2D Wrapper Frame");
         
@@ -101,9 +92,40 @@ public class DesktopLauncher {
         
         Container frameContainer = wrapperFrame.getContentPane();
         
+        // BorderLayout is the default layout for Swing elements. Specifying the
+        // "NORTH" constant forces the menu bar into the top-left, as typical.
         frameContainer.add(menuBar, BorderLayout.NORTH);
         
         wrapperFrame.setVisible(true);
+    }
+    
+    // These 'buildMenu_*' functions could/should probably be refactored into
+    // some sort of less-programmatic way of generating the menus. But it's not
+    // a priority right now.
+    
+    private static JMenu buildMenu_file() {
+        JMenu menu = new JMenu("File");
+        
+        // "new_" is icky, but "new" is a reserved keyword.
+        JMenuItem new_ = new JMenuItem("New");
+        JMenuItem open = new JMenuItem("Open");
+        JMenuItem save = new JMenuItem("Save");
+        
+        menu.add(new_);
+        menu.add(open);
+        menu.add(save);
+        
+        return menu;
+    }
+    
+    private static JMenu buildMenu_help() {
+        JMenu menu = new JMenu("Help");
+        
+        JMenuItem about = new JMenuItem("About");
+        
+        menu.add(about);
+        
+        return menu;
     }
     
     public static void main (String[] arg) {
