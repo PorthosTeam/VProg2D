@@ -1,3 +1,11 @@
+/*
+ Game testing - WASD / arrows to move, space to jump, 1-3 to change player sprite, 
+ M to set and play BGM, S to play a sound, P to save stuff, click to draw a circle 
+ at the mouse position, E to spawn an enemy on the ground under the mouse, B for 
+ a text box because why not. Lots of this needs to be hooked into the UI, among 
+other things. 
+- Trevor
+ */
 package com.mygdx.game;
 
 import java.awt.event.WindowAdapter;
@@ -6,7 +14,6 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 
 //import java.util.Iterator;
-
 import com.badlogic.gdx.ApplicationAdapter;
 //import com.badlogic.gdx.ApplicationListener;
 //import com.badlogic.gdx.math.MathUtils;
@@ -33,24 +40,24 @@ public class vprog extends ApplicationAdapter {
 
     // global vars
     public static Preferences prefs;
-    
+
     // player spawn point
     public static float x = 300, y = 156;
     public static float ground = 156;
-    
+
     // set player speed
     public static int hSpeed = 300;
     public static int vSpeed = 600;
     private static boolean jumpReady = true, jumpDone = false, jumping = false;
     public float jumpHeight = ground + 150;
-    
+
     // set the player sprite (1-3 currently)
     public static int playerNum = 1;
-    
+
     // bounds of the game frame
     private int rightBound = 1000 - 56;
     private int leftBound = 200;
-    
+
     // diection the player sprite is facing
     private boolean right = true;
 
@@ -70,17 +77,16 @@ public class vprog extends ApplicationAdapter {
     private Texture playerSprite2;
     private Texture playerSprite3;
     private Texture enemySprite1;
-    
+
     // Player container
     private Rectangle player;
-    
+
     // Enemies
     private Rectangle enemy;
     public Array<Rectangle> enemies;
     public IntArray enemiesType;
     private int enemyIterator = 0;
-    
-    
+
     // Used to insert a circle at mouse position
     // also a crude form of drawing
     private ShapeRenderer shapeRenderer;
@@ -103,7 +109,7 @@ public class vprog extends ApplicationAdapter {
 
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-        
+
         // load the UI buttons
         logo = new Texture(Gdx.files.internal("logo.png"));
         construct = new Texture(Gdx.files.internal("construct.png"));
@@ -122,14 +128,14 @@ public class vprog extends ApplicationAdapter {
         background1 = new Texture(Gdx.files.internal("bg1.png"));
         sound1 = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
         bgm1 = Gdx.audio.newMusic(Gdx.files.internal("bgm1.ogg"));
-        
+
         // Store enemies
         enemies = new Array<Rectangle>();
         enemiesType = new IntArray();
-        
+
         // Store drawn circles
         circles = new Array<Circle>();
-        
+
         // Debug stuff
         if (CREATE_DEBUG == true) {
             Gdx.app.log("Test", "Testing");
@@ -146,7 +152,7 @@ public class vprog extends ApplicationAdapter {
             frame.setSize(project.getPreferredSize());
             frame.setVisible(true);
         }
-        
+
         // UI panel (TBD)
         Rectangle panel = new Rectangle();
         panel.height = Gdx.graphics.getHeight();
@@ -180,7 +186,7 @@ public class vprog extends ApplicationAdapter {
         }
         return player;
     }
-    
+
     public Rectangle addEnemy(int num, int xPos, int yPos) {
         enemy = new Rectangle();
         enemy.x = xPos;
@@ -196,7 +202,7 @@ public class vprog extends ApplicationAdapter {
         }
         return enemy;
     }
-    
+
     // set the bgm music (also plays it)
     public void changeMusic(int num) {
         switch (num) {
@@ -228,29 +234,30 @@ public class vprog extends ApplicationAdapter {
         batch.draw(construct, 300, 10);
         batch.draw(runProgram, 600, 10);
         batch.draw(test, 900, 10);
-        
+
         // draw assets
         // draw the background
         batch.draw(background1, 200, 120);
-        
+
         // draw the set player sprite at current location
         // monstrous method call but it's necessary for a simple texture flip
         switch (playerNum) {
             case 1:
-                batch.draw(playerSprite1, player.x, player.y, player.width, player.height, 0, 0, (int)player.width, (int)player.height, !right, false);
+                batch.draw(playerSprite1, player.x, player.y, player.width, player.height, 0, 0, (int) player.width, (int) player.height, !right, false);
                 break;
             case 2:
-                batch.draw(playerSprite2, player.x, player.y, player.width, player.height, 0, 0, (int)player.width, (int)player.height, !right, false);
+                batch.draw(playerSprite2, player.x, player.y, player.width, player.height, 0, 0, (int) player.width, (int) player.height, !right, false);
                 break;
             case 3:
-                batch.draw(playerSprite3, player.x, player.y, player.width, player.height, 0, 0, (int)player.width, (int)player.height, !right, false);
+                batch.draw(playerSprite3, player.x, player.y, player.width, player.height, 0, 0, (int) player.width, (int) player.height, !right, false);
         }
-        
+
         // render enemies by iterating through list and checking corresponding enemyType array
         enemyIterator = 0;
         for (Rectangle currEnemy : enemies) {
-            if (enemiesType.get(enemyIterator) == 1)
+            if (enemiesType.get(enemyIterator) == 1) {
                 batch.draw(enemySprite1, currEnemy.x, currEnemy.y);
+            }
             enemyIterator++;
         }
         batch.end();
@@ -264,29 +271,31 @@ public class vprog extends ApplicationAdapter {
             player.x += hSpeed * Gdx.graphics.getDeltaTime();
             right = true;
         }
-        
+
         // Player jump
         if (Gdx.input.isKeyJustPressed(Keys.SPACE) || Gdx.input.isKeyJustPressed(Keys.W)) {
             if (jumpReady == true) {
                 playSound(1);
                 jumpReady = false;
                 jumping = true;
-        }
+            }
         }
         if (jumping && !jumpDone) {
             player.y += vSpeed * Gdx.graphics.getDeltaTime();
-                }
-        if (player.y >= jumpHeight)
+        }
+        if (player.y >= jumpHeight) {
             jumpDone = true;
-        if (player.y > ground && jumpDone)
+        }
+        if (player.y > ground && jumpDone) {
             player.y -= vSpeed * Gdx.graphics.getDeltaTime();
+        }
         if (player.y <= ground && jumping) {
             player.y = ground;
             jumping = false;
             jumpReady = true;
             jumpDone = false;
         }
-        
+
         // Various buttons to test functionalites
         // swap player sprite
         if (Gdx.input.isKeyPressed(Keys.NUM_1)) {
@@ -298,40 +307,41 @@ public class vprog extends ApplicationAdapter {
         if (Gdx.input.isKeyPressed(Keys.NUM_3)) {
             changePlayer(3);
         }
-        
+
         // set music + play
         if (Gdx.input.isKeyJustPressed(Keys.M)) {
             changeMusic(1);
         }
-        
+
         // set sound + play
         if (Gdx.input.isKeyJustPressed(Keys.S)) {
             playSound(1);
         }
-        
+
         // save editor state (only saves player sprite atm)
         if (Gdx.input.isKeyJustPressed(Keys.P)) {
             prefs.flush();
         }
-        
+
         /* Add a circle to the circles array at the mouse pos on left-click 
-        /* Use Gdx.input.isButtonPressed(Input.Buttons.LEFT) or use event 
-        /* handling with touchDown for a more discrete capture so only 
-        /* one circle is drawn at a time which is probably better in this
-        /* case
-        */
+         /* Use Gdx.input.isButtonPressed(Input.Buttons.LEFT) or use event 
+         /* handling with touchDown for a more discrete capture so only 
+         /* one circle is drawn at a time which is probably better in this
+         /* case
+         */
         if (Gdx.input.isTouched()) {
-         //Vector2 touchPos = new Vector2();
+            //Vector2 touchPos = new Vector2();
             //touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             // ShapeRenderer has an unintuitive way of using the Y value
             Circle newCircle = new Circle(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY() + 5, 10);
             circles.add(newCircle);
         }
-        
+
         // spawn an enemy on the ground
-        if (Gdx.input.isKeyJustPressed(Keys.E))
-            addEnemy(1, Gdx.input.getX(), (int)ground);
-        
+        if (Gdx.input.isKeyJustPressed(Keys.E)) {
+            addEnemy(1, Gdx.input.getX(), (int) ground);
+        }
+
         // render circles
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (Circle circle : circles) {
@@ -339,14 +349,14 @@ public class vprog extends ApplicationAdapter {
             shapeRenderer.circle(circle.x, circle.y, 10);
         }
         shapeRenderer.end();
-        
+
         // erase circles and enemies
         if (Gdx.input.isKeyJustPressed(Keys.R)) {
             circles.clear();
             enemies.clear();
             enemiesType.clear();
         }
-        
+
         // User text input (currently does nothing)
         if (Gdx.input.isKeyJustPressed(Keys.B)) {
             Gdx.input.getTextInput(new TextInputListener() {
