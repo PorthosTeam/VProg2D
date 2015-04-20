@@ -14,7 +14,7 @@ import java.awt.Toolkit;
 // These modules are Alex experimenting with a UI. All of this UI work might be
 // better off being moved into the Core, rather than Desktop, sub-project.
 import java.awt.Container;
-import java.awt.FlowLayout;
+import java.awt.BorderLayout;
 import javax.swing.*;
 
 public class DesktopLauncher {
@@ -100,16 +100,15 @@ public class DesktopLauncher {
         JFrame wrapperFrame = new JFrame("VProg2D Wrapper Frame");
         
         wrapperFrame.setBounds(bounds);
+        // NOTE: This is only DISPOSE_ON_CLOSE while I'm testing. In the future,
+        // it probably ought to be EXIT_ON_CLOSE (e.g. when, as I'm envisioning
+        // it, the main app is embedded inside this UI's JFrame.)
         wrapperFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
         Container frameContainer = wrapperFrame.getContentPane();
         
-        JLabel testPadding = new JLabel("text");
+        frameContainer.add(menuBar, BorderLayout.NORTH);
         
-        frameContainer.setLayout(new FlowLayout());
-        frameContainer.add(menuBar);
-        frameContainer.add(testPadding);
-
         wrapperFrame.setVisible(true);
     }
     
