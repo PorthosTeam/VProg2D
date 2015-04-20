@@ -82,17 +82,11 @@ public class DesktopLauncher {
         JMenu menuFile = new JMenu("File");
         JMenu menuHelp = new JMenu("Help");
         
-        JPopupMenu menuPopupFile = new JPopupMenu();
-        JPopupMenu menuPopupHelp = new JPopupMenu();
-        
         JMenuItem testJMenuItem1 = new JMenuItem("item1");
         JMenuItem testJMenuItem2 = new JMenuItem("item2");
         
-        menuPopupFile.add(testJMenuItem1);
-        menuPopupHelp.add(testJMenuItem2);
-        
-        menuFile.add(menuPopupFile);
-        menuHelp.add(menuPopupHelp);
+        menuFile.add(testJMenuItem1);
+        menuHelp.add(testJMenuItem2);
         
         menuBar.add(menuFile);
         menuBar.add(menuHelp);
