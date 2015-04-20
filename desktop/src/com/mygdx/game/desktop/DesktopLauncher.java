@@ -11,13 +11,11 @@ import java.awt.GraphicsEnvironment;
 import java.awt.GraphicsConfiguration;
 import java.awt.Toolkit;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JPopupMenu;
-import javax.swing.JMenuItem;
-import javax.swing.SwingUtilities;
+// These modules are Alex experimenting with a UI. All of this UI work might be
+// better off being moved into the Core, rather than Desktop, sub-project.
+import java.awt.Container;
+import java.awt.FlowLayout;
+import javax.swing.*;
 
 public class DesktopLauncher {
     // Swing is not thread safe, so it is "good practice" to move all Swing
@@ -104,10 +102,13 @@ public class DesktopLauncher {
         wrapperFrame.setBounds(bounds);
         wrapperFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         
-        wrapperFrame.getContentPane().add(menuBar);
+        Container frameContainer = wrapperFrame.getContentPane();
         
         JLabel testPadding = new JLabel("text");
-        wrapperFrame.getContentPane().add(testPadding);
+        
+        frameContainer.setLayout(new FlowLayout());
+        frameContainer.add(menuBar);
+        frameContainer.add(testPadding);
 
         wrapperFrame.setVisible(true);
     }
