@@ -2,11 +2,10 @@ package com.mygdx.game;
 
 import javax.swing.*;
 
-// This isn't really a class, so much as a way to stick all of the menu
-// generating functions into one spot for organization.
-// A cleaner and more "proper" refactor of this would be cool if anyone has the
-// time.
-public class JMenuBuilder {
+public final class JMenuBuilder {
+    // This is a utility class, not meant to be instantiated or inherited.
+    private JMenuBuilder(){}
+    
     private static JMenuItem newJMenuItemWithIcon
     (String name, String iconFilename) {
         ImageIcon icon = new ImageIcon(iconFilename);
