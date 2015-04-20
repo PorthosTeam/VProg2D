@@ -3,8 +3,8 @@
  M to set and play BGM, S to play a sound, P to save stuff, click to draw a circle 
  at the mouse position, E to spawn an enemy on the ground under the mouse, B for 
  a text box because why not. Lots of this needs to be hooked into the UI, among 
-other things. 
-- Trevor
+ other things. 
+ - Trevor
  */
 package com.mygdx.game;
 
@@ -324,11 +324,10 @@ public class vprog extends ApplicationAdapter {
         }
 
         /* Add a circle to the circles array at the mouse pos on left-click 
-         /* Use Gdx.input.isButtonPressed(Input.Buttons.LEFT) or use event 
-         /* handling with touchDown for a more discrete capture so only 
-         /* one circle is drawn at a time which is probably better in this
-         /* case
-         */
+         Use Gdx.input.isButtonPressed(Input.Buttons.LEFT) or use event 
+         handling with touchDown for a more discrete capture so only 
+         one circle is drawn at a time which is probably better in this
+         case. */
         if (Gdx.input.isTouched()) {
             //Vector2 touchPos = new Vector2();
             //touchPos.set(Gdx.input.getX(), Gdx.input.getY());
