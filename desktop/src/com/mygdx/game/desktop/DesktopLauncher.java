@@ -106,10 +106,18 @@ public class DesktopLauncher {
     private static JMenu buildMenu_file() {
         JMenu menu = new JMenu("File");
         
+        ImageIcon newIcon = new ImageIcon("createProject_small.png");
         // "new_" is icky, but "new" is a reserved keyword.
         JMenuItem new_ = new JMenuItem("New");
+        new_.setIcon(newIcon);
+        
+        ImageIcon openIcon = new ImageIcon("loadProject_small.png");
         JMenuItem open = new JMenuItem("Open");
+        open.setIcon(openIcon);
+        
+        ImageIcon saveIcon = new ImageIcon("saveProject_small.png");
         JMenuItem save = new JMenuItem("Save");
+        save.setIcon(saveIcon);
         
         menu.add(new_);
         menu.add(open);
