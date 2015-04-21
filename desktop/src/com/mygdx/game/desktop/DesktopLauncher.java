@@ -51,10 +51,7 @@ public class DesktopLauncher {
         JFrame wrapperFrame = new JFrame("VProg2D Wrapper Frame");
         
         wrapperFrame.setBounds(bounds);
-        // NOTE: This is only DISPOSE_ON_CLOSE while I'm testing. In the future,
-        // it probably ought to be EXIT_ON_CLOSE (e.g. when, as I'm envisioning
-        // it, the main app is embedded inside this UI's JFrame.)
-        wrapperFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        wrapperFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         Container frameContainer = wrapperFrame.getContentPane();
         
