@@ -41,39 +41,26 @@ public class VProgEngine extends ApplicationAdapter {
     // global vars
     public static Preferences prefs;
 
-    // player spawn point
-    public static float x = 300, y = 156;
-    public static float ground = 156;
-
-    // set player speed
-    public static int hSpeed = 300;
-    public static int vSpeed = 600;
-    private static boolean jumpReady = true, jumpDone = false, jumping = false;
-    public float jumpHeight = ground + 150;
-
-    // set the player sprite (0-2 currently)
-    public static int playerSpriteIndex = 0;
-
     // bounds of the game frame
-    private int rightBound = 1000 - 56;
-    private int leftBound = 200;
-
-    // diection the player sprite is facing
-    private boolean left = false;
+    public int rightBound = 1000 - 56;
+    public int leftBound = 200;
 
     // Game assets
     private Texture background1;
     private Texture [] playerSprites;
     private Texture enemySprite1;
-
-    // Player container
-    private Rectangle player;
+    
+    // Player
+    public Player playerInstance;
 
     // Enemies
     private Rectangle enemy;
     public Array<Rectangle> enemies;
     public IntArray enemiesType;
     private int enemyIterator = 0;
+    
+    // Environment
+    public static float ground = 156;
 
     // Used to insert a circle at mouse position
     // also a crude form of drawing
@@ -124,6 +111,7 @@ public class VProgEngine extends ApplicationAdapter {
             Project project = new Project();
             // testUser.addProject(project);
             frame.addWindowListener(new WindowAdapter() {
+                @Override
                 public void windowClosing(WindowEvent e) {
                     System.exit(0);
                 }
@@ -139,23 +127,9 @@ public class VProgEngine extends ApplicationAdapter {
         panel.width = Gdx.graphics.getWidth() / 10;
 
         // draw the default player
-        changePlayer(0);
+        playerInstance = new Player();
+        playerInstance.changePlayer(0);
 
-    }
-
-    // create a Rectangle to logically represent the player
-    public Rectangle changePlayer(int index) {
-        player = new Rectangle();
-        player.x = x;
-        player.y = y;
-        player.width = 56;
-        player.height = 80;
-        // swaps between the pre-set player sprites
-        if(index >= 0 && index <= 2) {
-            playerSpriteIndex = index;
-            prefs.putInteger("player", playerSpriteIndex);
-        }
-        return player;
     }
 
     public Rectangle addEnemy(int num, int xPos, int yPos) {
@@ -206,10 +180,10 @@ public class VProgEngine extends ApplicationAdapter {
 
         // draw the set player sprite at current location
         // monstrous method call but it's necessary for a simple texture flip
-        if(playerSpriteIndex >= 0 && playerSpriteIndex <= 2) {
-            batch.draw(playerSprites[playerSpriteIndex],
-                player.x, player.y, player.width, player.height, 0, 0,
-                (int) player.width, (int) player.height, left, false);
+        if(playerInstance.playerSpriteIndex >= 0 && playerInstance.playerSpriteIndex <= 2) {
+            batch.draw(playerSprites[playerInstance.playerSpriteIndex],
+                playerInstance.x, playerInstance.y, playerInstance.width, playerInstance.height, 0, 0,
+                (int) playerInstance.width, (int) playerInstance.height, playerInstance.left, false);
         }
 
         // render enemies by iterating through list and checking corresponding enemyType array
@@ -224,50 +198,50 @@ public class VProgEngine extends ApplicationAdapter {
 
         // Player movement at set speed
         if (Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
-            player.x -= hSpeed * Gdx.graphics.getDeltaTime();
-            left = true;
+            playerInstance.x -= playerInstance.hSpeed * Gdx.graphics.getDeltaTime();
+            playerInstance.left = true;
         }
         if (Gdx.input.isKeyPressed(Keys.RIGHT) || Gdx.input.isKeyPressed(Keys.D)) {
-            player.x += hSpeed * Gdx.graphics.getDeltaTime();
-            left = false;
+            playerInstance.x += playerInstance.hSpeed * Gdx.graphics.getDeltaTime();
+            playerInstance.left = false;
         }
 
         // Player jump
         if(Gdx.input.isKeyJustPressed(Keys.SPACE)
         || Gdx.input.isKeyJustPressed(Keys.W)
         || Gdx.input.isKeyJustPressed(Keys.UP)) {
-            if (jumpReady == true) {
+            if (playerInstance.jumpReady == true) {
                 playSound(1);
-                jumpReady = false;
-                jumping = true;
+                playerInstance.jumpReady = false;
+                playerInstance.jumping = true;
             }
         }
-        if (jumping && !jumpDone) {
-            player.y += vSpeed * Gdx.graphics.getDeltaTime();
+        if (playerInstance.jumping && !playerInstance.jumpDone) {
+            playerInstance.y += playerInstance.vSpeed * Gdx.graphics.getDeltaTime();
         }
-        if (player.y >= jumpHeight) {
-            jumpDone = true;
+        if (playerInstance.y >= playerInstance.jumpHeight) {
+            playerInstance.jumpDone = true;
         }
-        if (player.y > ground && jumpDone) {
-            player.y -= vSpeed * Gdx.graphics.getDeltaTime();
+        if (playerInstance.y > ground && playerInstance.jumpDone) {
+            playerInstance.y -= playerInstance.vSpeed * Gdx.graphics.getDeltaTime();
         }
-        if (player.y <= ground && jumping) {
-            player.y = ground;
-            jumping = false;
-            jumpReady = true;
-            jumpDone = false;
+        if (playerInstance.y <= ground && playerInstance.jumping) {
+            playerInstance.y = ground;
+            playerInstance.jumping = false;
+            playerInstance.jumpReady = true;
+            playerInstance.jumpDone = false;
         }
 
         // Various buttons to test functionalites
         // swap player sprite
         if (Gdx.input.isKeyPressed(Keys.NUM_1)) {
-            changePlayer(0);
+            playerInstance.changePlayer(0);
         }
         if (Gdx.input.isKeyPressed(Keys.NUM_2)) {
-            changePlayer(1);
+            playerInstance.changePlayer(1);
         }
         if (Gdx.input.isKeyPressed(Keys.NUM_3)) {
-            changePlayer(2);
+            playerInstance.changePlayer(2);
         }
 
         // set music + play
@@ -332,16 +306,12 @@ public class VProgEngine extends ApplicationAdapter {
         }
 
         // make sure the player stays within the screen bounds
-        if (player.x < leftBound) {
-            player.x = leftBound;
+        if (playerInstance.x < leftBound) {
+            playerInstance.x = leftBound;
         }
-        if (player.x > rightBound) {
-            player.x = rightBound;
+        if (playerInstance.x > rightBound) {
+            playerInstance.x = rightBound;
         }
-
-        // update player location
-        x = player.x;
-        y = player.y;
     }
 
     @Override
