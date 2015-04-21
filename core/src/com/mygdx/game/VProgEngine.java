@@ -305,8 +305,8 @@ public class VProgEngine extends ApplicationAdapter {
 
         // render circles
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(0, 0, 0, 1);
         for (Circle circle : circles) {
-            shapeRenderer.setColor(0, 0, 0, 1);
             shapeRenderer.circle(circle.x, circle.y, 10);
         }
         shapeRenderer.end();
