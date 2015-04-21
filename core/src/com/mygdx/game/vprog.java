@@ -233,7 +233,9 @@ public class vprog extends ApplicationAdapter {
         }
 
         // Player jump
-        if (Gdx.input.isKeyJustPressed(Keys.SPACE) || Gdx.input.isKeyJustPressed(Keys.W)) {
+        if(Gdx.input.isKeyJustPressed(Keys.SPACE)
+        || Gdx.input.isKeyJustPressed(Keys.W)
+        || Gdx.input.isKeyJustPressed(Keys.UP)) {
             if (jumpReady == true) {
                 playSound(1);
                 jumpReady = false;
