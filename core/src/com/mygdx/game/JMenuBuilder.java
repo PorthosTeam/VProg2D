@@ -9,8 +9,7 @@ public final class JMenuBuilder {
     private static JMenuItem newJMenuItemWithIcon
     (String name, String iconFilename) {
         ImageIcon icon = new ImageIcon(iconFilename);
-        JMenuItem item = new JMenuItem(name);
-        item.setIcon(icon);
+        JMenuItem item = new JMenuItem(name, icon);
         return item;
     }
     
