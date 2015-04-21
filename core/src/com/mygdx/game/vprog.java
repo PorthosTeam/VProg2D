@@ -212,7 +212,7 @@ public class vprog extends ApplicationAdapter {
 
         // draw assets
         // draw the background
-        batch.draw(background1, 200, 120);
+        batch.draw(background1, leftBound, 120);
 
         // draw the set player sprite at current location
         // monstrous method call but it's necessary for a simple texture flip
