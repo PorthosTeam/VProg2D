@@ -31,7 +31,18 @@ class MainUI
     {
         public void actionPerformed(ActionEvent e)
         {
-           System.out.print("New Project Action\n"); 
+            vprog = new VProgEngine();
+            
+            LwjglApplicationConfiguration config
+                = new LwjglApplicationConfiguration();
+            config.title = "VProg2D";
+            config.x = screenBounds.x;
+            config.y = screenBounds.y;
+            config.width = Math.min(screenBounds.width, 1280);
+            config.height = Math.min(screenBounds.height, 720);
+            config.resizable = true;
+            config.allowSoftwareMode = true;
+            new LwjglApplication(vprog, config);
         }
     };
     
@@ -90,19 +101,6 @@ class MainUI
     public MainUI()
     {
         screenBounds = WindowBoundsChecker.getWindowBounds();
-        
-        vprog = new VProgEngine();
-        
-        LwjglApplicationConfiguration config
-            = new LwjglApplicationConfiguration();
-        config.title = "VProg2D";
-        config.x = screenBounds.x;
-        config.y = screenBounds.y;
-        config.width = Math.min(screenBounds.width, 1280);
-        config.height = Math.min(screenBounds.height, 720);
-        config.resizable = true;
-        config.allowSoftwareMode = true;
-        new LwjglApplication(vprog, config);
         
         launchMainWindow(screenBounds);
     }
