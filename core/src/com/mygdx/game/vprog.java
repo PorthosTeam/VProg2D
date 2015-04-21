@@ -104,7 +104,8 @@ public class vprog extends ApplicationAdapter {
 
     @Override
     public void create() {
-        // save info @ %UserProfile%/.prefs/My Preferences (~/.prefs/My Preferences in UNIX)
+        // Get/initialize game preferences/state. Details documented at:
+        // https://github.com/libgdx/libgdx/wiki/Preferences
         prefs = Gdx.app.getPreferences("savestate");
 
         batch = new SpriteBatch();
