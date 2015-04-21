@@ -1,23 +1,53 @@
-package com.mygdx.game;
+package com.mygdx.game.desktop;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 
-public final class JMenuBuilder {
-    // This is a utility class, not meant to be instantiated or inherited.
-    private JMenuBuilder(){}
+public class JMenuBarBuilder
+{
+    private JMenuBar jMenuBar;
+    
+    public JMenuBarBuilder()
+    {
+        jMenuBar = new JMenuBar();
+    }
+    public JMenuBarBuilder(JMenuBar jMenuBar)
+    {
+        this.setJMenuBar(jMenuBar);
+    }
+    public JMenuBar getJMenuBar()
+    {
+        return jMenuBar;
+    }
+    public void setJMenuBar(JMenuBar newJMenuBar)
+    {
+        jMenuBar = newJMenuBar;
+    }
     
     private static JMenuItem newJMenuItemWithIcon
-    (String name, String iconFilename) {
+    (String name, String iconFilename)
+    {
         ImageIcon icon = new ImageIcon(iconFilename);
         JMenuItem item = new JMenuItem(name, icon);
         return item;
     }
     
-    public static JMenu buildFileMenu() {
+    public static JMenu buildFileMenu()
+    {
         JMenu menu = new JMenu("File");
         
         // "new_" is icky, but "new" is a reserved keyword.
         JMenuItem new_ = newJMenuItemWithIcon("New", "createProject_small.png");
+        new_.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JLabel popupTxt = new JLabel("selfmade");
+                JFrame popup = new JFrame();
+                popup.add(popupTxt);
+                popup.setVisible(true);
+                ((JMenuItem )e.getSource()).setText("EDIT!");
+            }
+        });
         JMenuItem open = newJMenuItemWithIcon("Open", "loadProject_small.png");
         JMenuItem save = newJMenuItemWithIcon("Save", "saveProject_small.png");
         
