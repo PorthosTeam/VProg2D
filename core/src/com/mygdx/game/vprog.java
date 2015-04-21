@@ -51,8 +51,8 @@ public class vprog extends ApplicationAdapter {
     private static boolean jumpReady = true, jumpDone = false, jumping = false;
     public float jumpHeight = ground + 150;
 
-    // set the player sprite (1-3 currently)
-    public static int playerNum = 1;
+    // set the player sprite (0-2 currently)
+    public static int playerSpriteIndex = 0;
 
     // bounds of the game frame
     private int rightBound = 1000 - 56;
@@ -63,9 +63,7 @@ public class vprog extends ApplicationAdapter {
 
     // Game assets
     private Texture background1;
-    private Texture playerSprite1;
-    private Texture playerSprite2;
-    private Texture playerSprite3;
+    private Texture [] playerSprites;
     private Texture enemySprite1;
 
     // Player container
@@ -102,9 +100,10 @@ public class vprog extends ApplicationAdapter {
         shapeRenderer = new ShapeRenderer();
         
         // load the pre-set assets for selection
-        playerSprite1 = new Texture(Gdx.files.internal("player.png"));
-        playerSprite2 = new Texture(Gdx.files.internal("player2.png"));
-        playerSprite3 = new Texture(Gdx.files.internal("player3.png"));
+        playerSprites = new Texture[3];
+        playerSprites[0] = new Texture(Gdx.files.internal("player.png"));
+        playerSprites[1] = new Texture(Gdx.files.internal("player2.png"));
+        playerSprites[2] = new Texture(Gdx.files.internal("player3.png"));
         enemySprite1 = new Texture(Gdx.files.internal("enemy1.png"));
         background1 = new Texture(Gdx.files.internal("bg1.png"));
         sound1 = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
@@ -140,30 +139,21 @@ public class vprog extends ApplicationAdapter {
         panel.width = Gdx.graphics.getWidth() / 10;
 
         // draw the default player
-        changePlayer(1);
+        changePlayer(0);
 
     }
 
     // create a Rectangle to logically represent the player
-    public Rectangle changePlayer(int num) {
+    public Rectangle changePlayer(int index) {
         player = new Rectangle();
         player.x = x;
         player.y = y;
         player.width = 56;
         player.height = 80;
         // swaps between the pre-set player sprites
-        switch (num) {
-            case 1:
-                playerNum = 1;
-                prefs.putInteger("player", 1);
-                break;
-            case 2:
-                playerNum = 2;
-                prefs.putInteger("player", 2);
-                break;
-            case 3:
-                playerNum = 3;
-                prefs.putInteger("player", 3);
+        if(index >= 0 && index <= 2) {
+            playerSpriteIndex = index;
+            prefs.putInteger("player", playerSpriteIndex);
         }
         return player;
     }
@@ -216,15 +206,10 @@ public class vprog extends ApplicationAdapter {
 
         // draw the set player sprite at current location
         // monstrous method call but it's necessary for a simple texture flip
-        switch (playerNum) {
-            case 1:
-                batch.draw(playerSprite1, player.x, player.y, player.width, player.height, 0, 0, (int) player.width, (int) player.height, left, false);
-                break;
-            case 2:
-                batch.draw(playerSprite2, player.x, player.y, player.width, player.height, 0, 0, (int) player.width, (int) player.height, left, false);
-                break;
-            case 3:
-                batch.draw(playerSprite3, player.x, player.y, player.width, player.height, 0, 0, (int) player.width, (int) player.height, left, false);
+        if(playerSpriteIndex >= 0 && playerSpriteIndex <= 2) {
+            batch.draw(playerSprites[playerSpriteIndex],
+                player.x, player.y, player.width, player.height, 0, 0,
+                (int) player.width, (int) player.height, left, false);
         }
 
         // render enemies by iterating through list and checking corresponding enemyType array
@@ -274,13 +259,13 @@ public class vprog extends ApplicationAdapter {
         // Various buttons to test functionalites
         // swap player sprite
         if (Gdx.input.isKeyPressed(Keys.NUM_1)) {
-            changePlayer(1);
+            changePlayer(0);
         }
         if (Gdx.input.isKeyPressed(Keys.NUM_2)) {
-            changePlayer(2);
+            changePlayer(1);
         }
         if (Gdx.input.isKeyPressed(Keys.NUM_3)) {
-            changePlayer(3);
+            changePlayer(2);
         }
 
         // set music + play
