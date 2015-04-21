@@ -33,7 +33,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.Preferences;
 
-public class VProg extends ApplicationAdapter {
+public class VProgEngine extends ApplicationAdapter {
 
     // Test create project module
     private boolean CREATE_DEBUG = false;
