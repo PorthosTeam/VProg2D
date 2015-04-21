@@ -19,7 +19,6 @@ import java.util.Random;
 import com.badlogic.gdx.ApplicationAdapter;
 //import com.badlogic.gdx.ApplicationListener;
 //import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -32,8 +31,8 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.Input.TextInputListener;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.assets.AssetManager;
 
 public class VProgEngine extends ApplicationAdapter {
 
@@ -42,6 +41,10 @@ public class VProgEngine extends ApplicationAdapter {
 
     // global vars
     public static Preferences prefs;
+    
+    // location of an uploaded asset
+    AssetManager manager;
+    public String assetLocation;
 
     // bounds of the game frame
     public int rightBound = 1000 - 56;
@@ -50,16 +53,14 @@ public class VProgEngine extends ApplicationAdapter {
     // Game assets
     private Array<Texture> backgrounds;
     private Array<Texture> playerSprites;
-    private Texture enemySprite1;
+    private Array<Texture> enemySprites;
     
     // Player
     public Player playerInstance;
 
     // Enemies
     private Rectangle enemy;
-    public Array<Rectangle> enemies;
-    public IntArray enemiesType;
-    private int enemyIterator = 0;
+    public Array<Enemy> enemies;
     
     // Environment
     public static float ground = 156;
@@ -88,25 +89,27 @@ public class VProgEngine extends ApplicationAdapter {
 
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
+        manager = new AssetManager();
         
         // load the pre-set assets for selection
         playerSprites = new Array<Texture>();
         playerSprites.add(new Texture(Gdx.files.internal("player.png")));
         playerSprites.add(new Texture(Gdx.files.internal("player2.png")));
         playerSprites.add(new Texture(Gdx.files.internal("player3.png")));
-        enemySprite1 = new Texture(Gdx.files.internal("enemy1.png"));
+        enemySprites = new Array<Texture>();
+        enemySprites.add(new Texture(Gdx.files.internal("enemy1.png")));
+        enemySprites.add(new Texture(Gdx.files.internal("enemy2.png")));
         backgrounds = new Array<Texture>();
         backgrounds.add(new Texture(Gdx.files.internal("bg1.png")));
         backgrounds.add(new Texture(Gdx.files.internal("bg2.png")));
         backgrounds.add(new Texture(Gdx.files.internal("bg3.png")));
         backgrounds.add(new Texture(Gdx.files.internal("bg4.png")));
-        backgrounds.add(new Texture(Gdx.files.internal("bg5.png")));
+        //backgrounds.add(new Texture(Gdx.files.internal("bg5.png")));
         sound1 = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
         bgm1 = Gdx.audio.newMusic(Gdx.files.internal("bgm1.ogg"));
 
         // Store enemies
-        enemies = new Array<Rectangle>();
-        enemiesType = new IntArray();
+        enemies = new Array<Enemy>();
 
         // Store drawn circles
         circles = new Array<Circle>();
@@ -138,22 +141,6 @@ public class VProgEngine extends ApplicationAdapter {
         playerInstance = new Player();
         playerInstance.changePlayer(0);
 
-    }
-
-    public Rectangle addEnemy(int num, int xPos, int yPos) {
-        enemy = new Rectangle();
-        enemy.x = xPos;
-        enemy.y = yPos;
-        enemy.width = 56;
-        enemy.height = 80;
-        // swaps between the pre-set enemy sprites
-        switch (num) {
-            case 1:
-                enemies.add(enemy);
-                enemiesType.add(1);
-                break;
-        }
-        return enemy;
     }
 
     // set the bgm music (also plays it)
@@ -194,13 +181,9 @@ public class VProgEngine extends ApplicationAdapter {
                 (int) playerInstance.width, (int) playerInstance.height, playerInstance.left, false);
         }
 
-        // render enemies by iterating through list and checking corresponding enemyType array
-        enemyIterator = 0;
-        for (Rectangle currEnemy : enemies) {
-            if (enemiesType.get(enemyIterator) == 1) {
-                batch.draw(enemySprite1, currEnemy.x, currEnemy.y);
-            }
-            enemyIterator++;
+        // render enemies
+        for (Enemy currEnemy : enemies) {
+            batch.draw(enemySprites.get(currEnemy.eType), currEnemy.x, currEnemy.y);
         }
         batch.end();
 
@@ -281,7 +264,7 @@ public class VProgEngine extends ApplicationAdapter {
 
         // spawn an enemy on the ground
         if (Gdx.input.isKeyJustPressed(Keys.E)) {
-            addEnemy(1, Gdx.input.getX(), (int) ground);
+            enemies.add(new Enemy(new Random().nextInt(2), Gdx.input.getX(), (int) ground));
         }
 
         // render circles
@@ -296,12 +279,18 @@ public class VProgEngine extends ApplicationAdapter {
         if (Gdx.input.isKeyJustPressed(Keys.R)) {
             circles.clear();
             enemies.clear();
-            enemiesType.clear();
         }
 
         // Change background
         if (Gdx.input.isKeyJustPressed(Keys.B)) {
             bgIndex = new Random().nextInt(5);
+        }
+        
+        if (Gdx.input.isKeyPressed(Keys.NUM_5)) {
+            manager.load("F:/data/bg5.png", Texture.class);
+            manager.update();
+            manager.finishLoading();
+            backgrounds.add(manager.get("F:/data/bg5.png", Texture.class));
         }
 
         // make sure the player stays within the screen bounds

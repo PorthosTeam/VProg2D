@@ -1,7 +1,6 @@
 
 package com.mygdx.game;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import static com.mygdx.game.VProgEngine.prefs;
 
@@ -33,9 +32,8 @@ public class Player extends Rectangle {
     }
     
     
-    // create a Rectangle to logically represent the player
+    // swaps between the pre-set player sprites
     public void changePlayer(int index) {
-        // swaps between the pre-set player sprites
         if(index >= 0 && index <= 2) {
             playerSpriteIndex = index;
             prefs.putInteger("player", playerSpriteIndex);
