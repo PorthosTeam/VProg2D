@@ -13,6 +13,8 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
+import java.util.Random;
+
 //import java.util.Iterator;
 import com.badlogic.gdx.ApplicationAdapter;
 //import com.badlogic.gdx.ApplicationListener;
@@ -46,8 +48,8 @@ public class VProgEngine extends ApplicationAdapter {
     public int leftBound = 200;
 
     // Game assets
-    private Texture background1;
-    private Texture [] playerSprites;
+    private Array<Texture> backgrounds;
+    private Array<Texture> playerSprites;
     private Texture enemySprite1;
     
     // Player
@@ -61,6 +63,7 @@ public class VProgEngine extends ApplicationAdapter {
     
     // Environment
     public static float ground = 156;
+    public int bgIndex = 0;
 
     // Used to insert a circle at mouse position
     // also a crude form of drawing
@@ -87,12 +90,17 @@ public class VProgEngine extends ApplicationAdapter {
         shapeRenderer = new ShapeRenderer();
         
         // load the pre-set assets for selection
-        playerSprites = new Texture[3];
-        playerSprites[0] = new Texture(Gdx.files.internal("player.png"));
-        playerSprites[1] = new Texture(Gdx.files.internal("player2.png"));
-        playerSprites[2] = new Texture(Gdx.files.internal("player3.png"));
+        playerSprites = new Array<Texture>();
+        playerSprites.add(new Texture(Gdx.files.internal("player.png")));
+        playerSprites.add(new Texture(Gdx.files.internal("player2.png")));
+        playerSprites.add(new Texture(Gdx.files.internal("player3.png")));
         enemySprite1 = new Texture(Gdx.files.internal("enemy1.png"));
-        background1 = new Texture(Gdx.files.internal("bg1.png"));
+        backgrounds = new Array<Texture>();
+        backgrounds.add(new Texture(Gdx.files.internal("bg1.png")));
+        backgrounds.add(new Texture(Gdx.files.internal("bg2.png")));
+        backgrounds.add(new Texture(Gdx.files.internal("bg3.png")));
+        backgrounds.add(new Texture(Gdx.files.internal("bg4.png")));
+        backgrounds.add(new Texture(Gdx.files.internal("bg5.png")));
         sound1 = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
         bgm1 = Gdx.audio.newMusic(Gdx.files.internal("bgm1.ogg"));
 
@@ -176,12 +184,12 @@ public class VProgEngine extends ApplicationAdapter {
 
         // draw assets
         // draw the background
-        batch.draw(background1, leftBound, 120);
+        batch.draw(backgrounds.get(bgIndex), leftBound, 120);
 
         // draw the set player sprite at current location
         // monstrous method call but it's necessary for a simple texture flip
         if(playerInstance.playerSpriteIndex >= 0 && playerInstance.playerSpriteIndex <= 2) {
-            batch.draw(playerSprites[playerInstance.playerSpriteIndex],
+            batch.draw(playerSprites.get(playerInstance.playerSpriteIndex),
                 playerInstance.x, playerInstance.y, playerInstance.width, playerInstance.height, 0, 0,
                 (int) playerInstance.width, (int) playerInstance.height, playerInstance.left, false);
         }
@@ -291,18 +299,9 @@ public class VProgEngine extends ApplicationAdapter {
             enemiesType.clear();
         }
 
-        // User text input (currently does nothing)
+        // Change background
         if (Gdx.input.isKeyJustPressed(Keys.B)) {
-            Gdx.input.getTextInput(new TextInputListener() {
-                @Override
-                public void input(String text) {
-                }
-
-                @Override
-                public void canceled() {
-                }
-            }, "Test", "Test", "Test");
-            node = new Node();
+            bgIndex = new Random().nextInt(5);
         }
 
         // make sure the player stays within the screen bounds
