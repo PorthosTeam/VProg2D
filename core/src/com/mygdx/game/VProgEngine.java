@@ -280,9 +280,8 @@ public class VProgEngine extends ApplicationAdapter {
             playSound(1);
         }
 
-        // save editor state (only saves player sprite atm)
         if (Gdx.input.isKeyJustPressed(Keys.P)) {
-            prefs.flush();
+            this.save();
         }
 
         /* Add a circle to the circles array at the mouse pos on left-click 
@@ -362,5 +361,11 @@ public class VProgEngine extends ApplicationAdapter {
 
     @Override
     public void resume() {
+    }
+    
+    // save editor state (only saves player sprite atm)
+    public void save()
+    {
+        prefs.flush();
     }
 }

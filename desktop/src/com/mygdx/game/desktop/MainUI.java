@@ -58,7 +58,9 @@ class MainUI
     {
         public void actionPerformed(ActionEvent e)
         {
-           System.out.print("Save Project Action\n"); 
+           // If libgdx's prefs.flush() returns a success or failure, we should
+           // provide the user some 'save succesful'/'save failed' feedback.
+           vprog.save();
         }
     };
     
