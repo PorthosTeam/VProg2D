@@ -1,9 +1,13 @@
 /*
  Game testing - WASD / arrows to move, space to jump, 1-3 to change player sprite, 
  M to set and play BGM, S to play a sound, P to save stuff, click to draw a circle 
- at the mouse position, E to spawn an enemy on the ground under the mouse, B for 
- a text box because why not. Lots of this needs to be hooked into the UI, among 
- other things. 
+ at the mouse position, E to spawn an enemy on the ground under the mouse.
+
+**NEW- 'O' will start the first spawned enemy on patrol and 'I' will stop the
+patrol, assuming an enemy is spawned. B will randomly swap between backgrounds,
+and '5' will dynamically load the bg5 background from the set path in bg5Path.**
+
+Lots of this needs to be hooked into the UI, among other things. 
  - Trevor
  */
 package com.mygdx.game;
@@ -33,11 +37,17 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
+//import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.Color;
 
 public class VProgEngine extends ApplicationAdapter {
 
     // Test create project module
     private boolean CREATE_DEBUG = false;
+    private String bg5Path = "F:/data/bg5.png";
+    
+    public static int WIDTH = 800, HEIGHT = 600;
 
     // global vars
     public static Preferences prefs;
@@ -45,10 +55,6 @@ public class VProgEngine extends ApplicationAdapter {
     // location of an uploaded asset
     AssetManager manager;
     public String assetLocation;
-
-    // bounds of the game frame
-    public int rightBound = 1000 - 56;
-    public int leftBound = 200;
 
     // Game assets
     private Array<Texture> backgrounds;
@@ -63,21 +69,26 @@ public class VProgEngine extends ApplicationAdapter {
     public Array<Enemy> enemies;
     
     // Environment
-    public static float ground = 156;
+    public static float ground = 36;
     public int bgIndex = 0;
+    
+    // Text
+    private BitmapFont text;
 
     // Used to insert a circle at mouse position
     // also a crude form of drawing
     private ShapeRenderer shapeRenderer;
     public Array<Circle> circles;
 
-    private Sound sound1;
-    private Music bgm1;
+    private Array<Sound> sounds;
+    private Array<Music> bgms;
 
     // The infamous node. If only we knew how to use it.
     private Node node;
-
-    public static int WIDTH = 800, HEIGHT = 600;
+    
+    // bounds of the game frame
+    public int leftBound = 0;
+    public int rightBound = WIDTH;
     SpriteBatch batch;
     Texture img;
 
@@ -105,8 +116,19 @@ public class VProgEngine extends ApplicationAdapter {
         backgrounds.add(new Texture(Gdx.files.internal("bg3.png")));
         backgrounds.add(new Texture(Gdx.files.internal("bg4.png")));
         //backgrounds.add(new Texture(Gdx.files.internal("bg5.png")));
-        sound1 = Gdx.audio.newSound(Gdx.files.internal("jump.wav"));
-        bgm1 = Gdx.audio.newMusic(Gdx.files.internal("bgm1.ogg"));
+        sounds = new Array<Sound>();
+        sounds.add(Gdx.audio.newSound(Gdx.files.internal("jump.wav")));
+        sounds.add(Gdx.audio.newSound(Gdx.files.internal("damaged.ogg")));
+        sounds.add(Gdx.audio.newSound(Gdx.files.internal("fall.ogg")));
+        sounds.add(Gdx.audio.newSound(Gdx.files.internal("KO.ogg")));
+        sounds.add(Gdx.audio.newSound(Gdx.files.internal("throw.ogg")));
+        sounds.add(Gdx.audio.newSound(Gdx.files.internal("menu.wav")));
+        bgms = new Array<Music>();
+        bgms.add(Gdx.audio.newMusic(Gdx.files.internal("bgm1.ogg")));
+        
+        // Text
+        text = new BitmapFont();
+        text.setColor(Color.RED);
 
         // Store enemies
         enemies = new Array<Enemy>();
@@ -133,36 +155,30 @@ public class VProgEngine extends ApplicationAdapter {
         }
 
         // UI panel (TBD)
-        Rectangle panel = new Rectangle();
-        panel.height = Gdx.graphics.getHeight();
-        panel.width = Gdx.graphics.getWidth() / 10;
+        //Rectangle panel = new Rectangle();
+        //panel.height = Gdx.graphics.getHeight();
+        //panel.width = Gdx.graphics.getWidth() / 10;
 
         // draw the default player
-        playerInstance = new Player();
-        playerInstance.changePlayer(0);
+        playerInstance = new Player(0);
+        rightBound -= playerInstance.width;
 
     }
 
     // set the bgm music (also plays it)
     public void changeMusic(int num) {
-        switch (num) {
-            case 1:
-                bgm1.setLooping(true);
-                bgm1.play();
-        }
+        bgms.get(num).setLooping(true);
+        bgms.get(num).play();
     }
 
     // set / play a sound file
     public void playSound(int num) {
-        switch (num) {
-            case 1:
-                sound1.play();
-        }
+        sounds.get(num).play();
     }
 
     @Override
     public void render() {
-        Gdx.gl.glClearColor(1, 1, 1, 1);
+        Gdx.gl.glClearColor(.25f, .25f, .25f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // basic UI
@@ -171,7 +187,7 @@ public class VProgEngine extends ApplicationAdapter {
 
         // draw assets
         // draw the background
-        batch.draw(backgrounds.get(bgIndex), leftBound, 120);
+        batch.draw(backgrounds.get(bgIndex), leftBound, 0);
 
         // draw the set player sprite at current location
         // monstrous method call but it's necessary for a simple texture flip
@@ -189,6 +205,9 @@ public class VProgEngine extends ApplicationAdapter {
             if (currEnemy.isPatrolling()) {
                 currEnemy.update(Gdx.graphics.getDeltaTime());
             }
+            // basic collision detection
+            if (playerInstance.x >= currEnemy.x - currEnemy.width/1.25 && playerInstance.x <= currEnemy.x + currEnemy.width/1.25 && playerInstance.y <= currEnemy.y + currEnemy.height/1.5 )
+                text.draw(batch, "OW", WIDTH/2, HEIGHT/1.25f);
         }
         batch.end();
 
@@ -207,7 +226,7 @@ public class VProgEngine extends ApplicationAdapter {
         || Gdx.input.isKeyJustPressed(Keys.W)
         || Gdx.input.isKeyJustPressed(Keys.UP)) {
             if (playerInstance.jumpReady == true) {
-                playSound(1);
+                playSound(0);
                 playerInstance.jumpReady = false;
                 playerInstance.jumping = true;
             }
@@ -242,12 +261,12 @@ public class VProgEngine extends ApplicationAdapter {
 
         // set music + play
         if (Gdx.input.isKeyJustPressed(Keys.M)) {
-            changeMusic(1);
+            changeMusic(0);
         }
 
         // set sound + play
         if (Gdx.input.isKeyJustPressed(Keys.S)) {
-            playSound(1);
+            playSound(0);
         }
 
         if (Gdx.input.isKeyJustPressed(Keys.P)) {
@@ -274,13 +293,17 @@ public class VProgEngine extends ApplicationAdapter {
         
         // set first enemy to patrolling
         if (Gdx.input.isKeyJustPressed(Keys.O)) {
+            if (enemies.size > 0) {
             Enemy e = enemies.get(0);
             e.SetPatrolPoints(e.x - 100, e.x + 100);
+            }
         }
         
         // stop  first enemy from patrolling
         if (Gdx.input.isKeyJustPressed(Keys.I)) {
-            enemies.get(0).stopPatrol();
+            if (enemies.size > 0) {
+                enemies.get(0).stopPatrol();
+            }
         }
 
         // render circles
@@ -299,14 +322,17 @@ public class VProgEngine extends ApplicationAdapter {
 
         // Change background
         if (Gdx.input.isKeyJustPressed(Keys.B)) {
-            bgIndex = new Random().nextInt(5);
+            if (backgrounds.size == 4)
+                bgIndex = new Random().nextInt(4);
+            else
+                bgIndex = new Random().nextInt(5);
         }
         
         if (Gdx.input.isKeyPressed(Keys.NUM_5)) {
-            manager.load("F:/data/bg5.png", Texture.class);
+            manager.load(bg5Path, Texture.class);
             manager.update();
             manager.finishLoading();
-            backgrounds.add(manager.get("F:/data/bg5.png", Texture.class));
+            backgrounds.add(manager.get(bg5Path, Texture.class));
         }
 
         // make sure the player stays within the screen bounds
