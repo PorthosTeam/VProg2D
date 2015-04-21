@@ -183,7 +183,12 @@ public class VProgEngine extends ApplicationAdapter {
 
         // render enemies
         for (Enemy currEnemy : enemies) {
-            batch.draw(enemySprites.get(currEnemy.eType), currEnemy.x, currEnemy.y);
+            batch.draw(enemySprites.get(currEnemy.eType),
+                currEnemy.x, currEnemy.y, currEnemy.width, currEnemy.height, 0, 0,
+                (int) currEnemy.width, (int) currEnemy.height, !currEnemy.left, false);
+            if (currEnemy.isPatrolling()) {
+                currEnemy.update(Gdx.graphics.getDeltaTime());
+            }
         }
         batch.end();
 
@@ -265,6 +270,17 @@ public class VProgEngine extends ApplicationAdapter {
         // spawn an enemy on the ground
         if (Gdx.input.isKeyJustPressed(Keys.E)) {
             enemies.add(new Enemy(new Random().nextInt(2), Gdx.input.getX(), (int) ground));
+        }
+        
+        // set first enemy to patrolling
+        if (Gdx.input.isKeyJustPressed(Keys.O)) {
+            Enemy e = enemies.get(0);
+            e.SetPatrolPoints(e.x - 100, e.x + 100);
+        }
+        
+        // stop  first enemy from patrolling
+        if (Gdx.input.isKeyJustPressed(Keys.I)) {
+            enemies.get(0).stopPatrol();
         }
 
         // render circles
