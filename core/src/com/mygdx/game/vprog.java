@@ -106,7 +106,7 @@ public class vprog extends ApplicationAdapter {
     public void create() {
         // Get/initialize game preferences/state. Details documented at:
         // https://github.com/libgdx/libgdx/wiki/Preferences
-        prefs = Gdx.app.getPreferences("savestate");
+        prefs = Gdx.app.getPreferences("vprog2d_savestate");
 
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
