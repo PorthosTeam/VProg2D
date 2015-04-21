@@ -61,16 +61,6 @@ public class vprog extends ApplicationAdapter {
     // diection the player sprite is facing
     private boolean right = true;
 
-    // UI assets
-    private Texture logo;
-    private Texture construct;
-    private Texture createProject;
-    private Texture loadProject;
-    private Texture runProgram;
-    private Texture saveProject;
-    private Texture test;
-    private Texture uploadAsset;
-
     // Game assets
     private Texture background1;
     private Texture playerSprite1;
@@ -110,17 +100,7 @@ public class vprog extends ApplicationAdapter {
 
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
-
-        // load the UI buttons
-        logo = new Texture(Gdx.files.internal("logo.png"));
-        construct = new Texture(Gdx.files.internal("construct.png"));
-        createProject = new Texture(Gdx.files.internal("createProject.png"));
-        loadProject = new Texture(Gdx.files.internal("loadProject.png"));
-        runProgram = new Texture(Gdx.files.internal("runProgram.png"));
-        saveProject = new Texture(Gdx.files.internal("saveProject.png"));
-        test = new Texture(Gdx.files.internal("test.png"));
-        uploadAsset = new Texture(Gdx.files.internal("uploadAsset.png"));
-
+        
         // load the pre-set assets for selection
         playerSprite1 = new Texture(Gdx.files.internal("player.png"));
         playerSprite2 = new Texture(Gdx.files.internal("player2.png"));
@@ -229,12 +209,6 @@ public class vprog extends ApplicationAdapter {
         // basic UI
         batch.begin();
         //batch.draw(logo, Gdx.graphics.getWidth() / 2 - logo.getWidth() / 2, Gdx.graphics.getHeight() - logo.getHeight());
-        batch.draw(saveProject, 10, Gdx.graphics.getHeight() - createProject.getHeight() * 9);
-        batch.draw(loadProject, 10, Gdx.graphics.getHeight() - createProject.getHeight() * 7);
-        batch.draw(createProject, 10, Gdx.graphics.getHeight() - createProject.getHeight() * 5);
-        batch.draw(construct, 300, 10);
-        batch.draw(runProgram, 600, 10);
-        batch.draw(test, 900, 10);
 
         // draw assets
         // draw the background
