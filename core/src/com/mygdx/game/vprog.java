@@ -59,7 +59,7 @@ public class vprog extends ApplicationAdapter {
     private int leftBound = 200;
 
     // diection the player sprite is facing
-    private boolean right = true;
+    private boolean left = false;
 
     // Game assets
     private Texture background1;
@@ -218,13 +218,13 @@ public class vprog extends ApplicationAdapter {
         // monstrous method call but it's necessary for a simple texture flip
         switch (playerNum) {
             case 1:
-                batch.draw(playerSprite1, player.x, player.y, player.width, player.height, 0, 0, (int) player.width, (int) player.height, !right, false);
+                batch.draw(playerSprite1, player.x, player.y, player.width, player.height, 0, 0, (int) player.width, (int) player.height, left, false);
                 break;
             case 2:
-                batch.draw(playerSprite2, player.x, player.y, player.width, player.height, 0, 0, (int) player.width, (int) player.height, !right, false);
+                batch.draw(playerSprite2, player.x, player.y, player.width, player.height, 0, 0, (int) player.width, (int) player.height, left, false);
                 break;
             case 3:
-                batch.draw(playerSprite3, player.x, player.y, player.width, player.height, 0, 0, (int) player.width, (int) player.height, !right, false);
+                batch.draw(playerSprite3, player.x, player.y, player.width, player.height, 0, 0, (int) player.width, (int) player.height, left, false);
         }
 
         // render enemies by iterating through list and checking corresponding enemyType array
@@ -240,11 +240,11 @@ public class vprog extends ApplicationAdapter {
         // Player movement at set speed
         if (Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
             player.x -= hSpeed * Gdx.graphics.getDeltaTime();
-            right = false;
+            left = true;
         }
         if (Gdx.input.isKeyPressed(Keys.RIGHT) || Gdx.input.isKeyPressed(Keys.D)) {
             player.x += hSpeed * Gdx.graphics.getDeltaTime();
-            right = true;
+            left = false;
         }
 
         // Player jump
