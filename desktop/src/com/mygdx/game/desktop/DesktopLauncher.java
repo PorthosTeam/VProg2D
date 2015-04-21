@@ -32,14 +32,11 @@ public class DesktopLauncher {
         LwjglApplicationConfiguration config
             = new LwjglApplicationConfiguration();
         config.title = "VProg2D";
-        //config.x = screenBounds.x;
-        //config.y = screenBounds.y;
-        //config.width = screenBounds.width;
-        //config.height = screenBounds.height;
-        //config.resizable = true;
-        config.width = 1280;
-        config.height = 720;
-        config.resizable = false;
+        config.x = screenBounds.x;
+        config.y = screenBounds.y;
+        config.width = Math.min(screenBounds.width, 1280);
+        config.height = Math.min(screenBounds.height, 720);
+        config.resizable = true;
         config.allowSoftwareMode = true;
         new LwjglApplication(new vprog(), config);
     }
