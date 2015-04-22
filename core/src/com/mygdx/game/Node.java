@@ -21,26 +21,36 @@ import javax.swing.JButton;
 
 //JFrame class, actual logic done in here
 public class Node extends JPanel implements ActionListener, Serializable{
-  private int[] number;             //Test to store value
+
+  private class Row{
+  //Nested class to hold the values per a Row
+    public int value;
+    public Node attachedNode;
+    public JTextField textField;
+    public JButton removeButton;
+  }
+
+  public int x, y;                  //Coordinates in the environment
+
+  private Row[] rows;
   
   private GridLayout layout;        //Layout for user interface
   
   private JPanel inputArea;         //User interface
   private JTextField name;          //Greeting
-  private JTextField[] insertField; //User input field
-  private JButton[] removeButton;   //Button per input field, removes them
   
   private Node parent;
-  private Node[] children;
   
   public Node(){
     //Initial Constructor statement, set the defaults
-    number = new int[1]; 
-    insertField = new JTextField[1];
-    removeButton = new JButton[1];
-    number[0] = 0;
+    x = 50;
+    y = 50;
+    
+    rows = new Row[1];
+     
+    rows[0].value = 0;
+    rows[0].attachedNode = null;
     parent = null;
-    children = null;
     
     //Set up the overarching layout to simplify GUI construction
     layout = new GridLayout(2, 1);
@@ -53,27 +63,27 @@ public class Node extends JPanel implements ActionListener, Serializable{
     
     //Build components and add them
     name = new JTextField(10);
-    insertField[0] = new JTextField(10);
-    inputArea.add(insertField[0]);
-    removeButton[0] = new JButton("X");
-    inputArea.add(removeButton[0]);
+    rows[0].textField = new JTextField(10);
+    inputArea.add(rows[0].textField);
+    rows[0].removeButton = new JButton("X");
+    inputArea.add(rows[0].removeButton);
     add(name);
     add(inputArea);
     
     //Set them up with actionlisteners
     name.addActionListener(this);
-    insertField[0].addActionListener(this);
-    removeButton[0].addActionListener(this);
+    rows[0].textField.addActionListener(this);
+    rows[0].removeButton.addActionListener(this);
   }
   
   public void actionPerformed(ActionEvent event){
   //Handle all event behaviors
-    for(int i = 0; i < insertField.length; ++i){
-      if(event.getSource() == insertField[i]){
+    for(int i = 0; i < rows.length; ++i){
+      if(event.getSource() == rows[i].textField){
       //If change to textfield, make it an int, store it
-        number[i] = Integer.parseInt(insertField[i].getText());
+        rows[i].value = Integer.parseInt(rows[i].textField.getText());
       }
-      else if(event.getSource() == removeButton[i]){
+      else if(event.getSource() == rows[i].removeButton){
       //If click removeButton, remove that row of text and button
         removeValue(i);
       }
@@ -81,36 +91,46 @@ public class Node extends JPanel implements ActionListener, Serializable{
   }
   
   private void addValue(){
+    Row[] rowsTemp = new Row[rows.length + 1];
     
+    //Resize the array
+    for(int i = 0; i < rows.length; ++i){
+    //Copy vals of rows into a temp
+      rowsTemp[i] = rows[i];
+    }
+    
+    //Set defaults at the end
+    int newSize = rows.length + 1;
+    rowsTemp[newSize].value = 0;
+    rowsTemp[newSize].attachedNode = null;
+    rowsTemp[newSize].textField = new JTextField(10);
+    rowsTemp[newSize].removeButton = new JButton("X"); 
+    rowsTemp[newSize].textField.addActionListener(this);
+    rowsTemp[newSize].removeButton.addActionListener(this);
+    
+    rows = rowsTemp;
   }
   
   private void removeValue(int i){
     //Clear values
-    inputArea.remove(insertField[i]);
-    inputArea.remove(removeButton[i]);
+    inputArea.remove(rows[i].textField);
+    inputArea.remove(rows[i].removeButton);
     
-    JTextField[] insertTemp = new JTextField[insertField.length - 1];
-    JButton[] removeTemp = new JButton[insertField.length - 1];
-    int[] numberTemp = new int[insertField.length - 1];
+    Row[] rowsTemp = new Row[rows.length - 1];
     
     //Resize the array
     for(int j = 0; j < i; ++j){
     //Copy the values up to the removed fields
-      insertTemp[j] = insertField[j];
-      removeTemp[j] = removeButton[j];
-      numberTemp[j] = number[j];
+      rowsTemp[j] = rows[j];
     }
     
-    for(int j = i + 1; j < insertField.length; ++j){
+    for(int j = i + 1; j < rows.length; ++j){
     //Then move the values up 1 index
-      insertTemp[j - 1] = insertField[j];
-      removeTemp[j - 1] = removeButton[j];
-      numberTemp[j - 1] = number[j];
+      rowsTemp[j - 1] = rows[j];
     }
     
-    insertField = insertTemp;
-    removeButton = removeTemp;
-    number = numberTemp;
+    //Set the stored to the temps
+    rows = rowsTemp;
   }
   
   private void changeParent(Node p){
