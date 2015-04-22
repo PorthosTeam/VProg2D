@@ -50,6 +50,9 @@ public class VProgEngine extends ApplicationAdapter {
     public static int WIDTH = 800, HEIGHT = 600;
 
     // global vars
+    private String name;
+    // TODO 2015-04-22: This should NOT be static. But external classes link to
+    // it. Should not be thus coupled. Will fix later.
     public static Preferences prefs;
     
     // location of an uploaded asset
@@ -91,12 +94,18 @@ public class VProgEngine extends ApplicationAdapter {
     public int rightBound = WIDTH;
     SpriteBatch batch;
     Texture img;
+    
+    // This top constructor is valid, because you can then setName to pick your
+    // instance name, but presently I can't think of a good reason to use it.
+    public VProgEngine(){}
+    public VProgEngine(String instanceName)
+    {
+        this.setName(instanceName);
+    }
 
     @Override
     public void create() {
-        // Get/initialize game preferences/state. Details documented at:
-        // https://github.com/libgdx/libgdx/wiki/Preferences
-        prefs = Gdx.app.getPreferences("vprog2d_savestate");
+        this.loadEnginePrefs();
 
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
@@ -270,7 +279,7 @@ public class VProgEngine extends ApplicationAdapter {
         }
 
         if (Gdx.input.isKeyJustPressed(Keys.P)) {
-            this.save();
+            this.saveEnginePrefs();
         }
 
         /* Add a circle to the circles array at the mouse pos on left-click 
@@ -363,9 +372,24 @@ public class VProgEngine extends ApplicationAdapter {
     public void resume() {
     }
     
+    // This section contains numerous functions exposed to allow the UI to
+    // manage the VProgEngine.
+    
     // save editor state (only saves player sprite atm)
-    public void save()
+    public void saveEnginePrefs()
     {
         prefs.flush();
+    }
+    
+    // Get/initialize game preferences/state. Details documented at:
+    // https://github.com/libgdx/libgdx/wiki/Preferences
+    public void loadEnginePrefs()
+    {
+        prefs = Gdx.app.getPreferences(name);
+    }
+    
+    public void setName(String newName)
+    {
+        name = newName;
     }
 }

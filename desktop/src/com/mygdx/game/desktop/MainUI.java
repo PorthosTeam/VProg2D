@@ -27,15 +27,17 @@ class MainUI
     // The actual editable game engine.
     private VProgEngine vprog;
     
+    // Actions for each of the menu buttons.
     private ActionListener newProjectAction = new ActionListener()
     {
         public void actionPerformed(ActionEvent e)
         {
-            vprog = new VProgEngine();
+            String name = "blah";
+            vprog = new VProgEngine(name);
             
             LwjglApplicationConfiguration config
                 = new LwjglApplicationConfiguration();
-            config.title = "VProg2D";
+            config.title = name;
             config.x = -1;
             config.y = -1;
             config.width = Math.min(screenBounds.width, 800);
@@ -60,7 +62,7 @@ class MainUI
         {
            // If libgdx's prefs.flush() returns a success or failure, we should
            // provide the user some 'save succesful'/'save failed' feedback.
-           vprog.save();
+           vprog.saveEnginePrefs();
         }
     };
     
@@ -134,7 +136,7 @@ class MainUI
     {
         JMenuBar menuBar = buildMenuBar();
         
-        JFrame wrapperFrame = new JFrame("VProg2D Wrapper Frame");
+        JFrame wrapperFrame = new JFrame("VProg2D");
         
         wrapperFrame.setBounds(bounds);
         wrapperFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -144,7 +146,7 @@ class MainUI
         // BorderLayout is the default layout for Swing elements. Specifying the
         // "NORTH" constant forces the menu bar into the top-left, as typical.
         frameContainer.add(menuBar, BorderLayout.NORTH);
-        
+
         wrapperFrame.setVisible(true);
     }
 }
