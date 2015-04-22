@@ -95,6 +95,9 @@ public class VProgEngine extends ApplicationAdapter {
     SpriteBatch batch;
     Texture img;
     
+    Doodad doodad;
+    Mover mover;
+    
     // This top constructor is valid, because you can then setName to pick your
     // instance name, but presently I can't think of a good reason to use it.
     public VProgEngine(){}
@@ -172,6 +175,10 @@ public class VProgEngine extends ApplicationAdapter {
         playerInstance = new Player(0);
         rightBound -= playerInstance.width;
 
+        // Some testing of the new primitive classes:
+        Doodad.setSpriteBatch(batch);
+        doodad = new Doodad(50, 50, 50, 50, enemySprites.get(0));
+        mover = new Mover(50, 50, 50, 50, enemySprites.get(1), 20, 20, -1, -1);
     }
 
     // set the bgm music (also plays it)
@@ -218,7 +225,10 @@ public class VProgEngine extends ApplicationAdapter {
             if (playerInstance.x >= currEnemy.x - currEnemy.width/1.25 && playerInstance.x <= currEnemy.x + currEnemy.width/1.25 && playerInstance.y <= currEnemy.y + currEnemy.height/1.5 )
                 text.draw(batch, "OW", WIDTH/2, HEIGHT/1.25f);
         }
+        doodad.draw();
+        mover.draw();
         batch.end();
+        mover.move(Gdx.graphics.getDeltaTime());
 
         // Player movement at set speed
         if (Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
