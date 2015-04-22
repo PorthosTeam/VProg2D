@@ -368,6 +368,19 @@ public class VProgEngine extends ApplicationAdapter {
     public void dispose() {
         // lots of stuff to add here
         batch.dispose();
+        shapeRenderer.dispose();
+        manager.dispose();
+        text.dispose();
+        for (Texture e : playerSprites)
+            e.dispose();
+        for (Texture e : enemySprites)
+            e.dispose();
+        for (Texture e : backgrounds)
+            e.dispose();
+        for (Sound e : sounds)
+            e.dispose();
+        for (Music e : bgms)
+            e.dispose();
     }
 
     @Override
