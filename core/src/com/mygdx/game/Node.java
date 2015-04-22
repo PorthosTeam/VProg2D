@@ -39,8 +39,6 @@ public class Node extends JPanel implements ActionListener, Serializable{
   private JPanel inputArea;         //User interface
   private JTextField name;          //Greeting
   
-  private Node parent;
-  
   public Node(){
     //Initial Constructor statement, set the defaults
     x = 50;
@@ -50,7 +48,6 @@ public class Node extends JPanel implements ActionListener, Serializable{
      
     rows[0].value = 0;
     rows[0].attachedNode = null;
-    parent = null;
     
     //Set up the overarching layout to simplify GUI construction
     layout = new GridLayout(2, 1);
@@ -88,6 +85,15 @@ public class Node extends JPanel implements ActionListener, Serializable{
         removeValue(i);
       }
     }
+  }
+  
+  public void addChild(Node in, int i){
+    removeChild(i);
+    rows[i].attachedNode = in;
+  }
+  
+  public void removeChild(int i){
+    rows[i].attachedNode = null;
   }
   
   private void addValue(){
@@ -131,17 +137,5 @@ public class Node extends JPanel implements ActionListener, Serializable{
     
     //Set the stored to the temps
     rows = rowsTemp;
-  }
-  
-  private void changeParent(Node p){
-  
-  }
-  
-  private void addChild(Node c){
-  
-  }
-  
-  private void removeChild(int i){
-  
   }
 }
