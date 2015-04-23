@@ -1,5 +1,6 @@
-package com.mygdx.game;
+package com.mygdx.game.desktop;
 
+import com.mygdx.game.desktop.Project;
 import java.util.ArrayList;
 
 /**

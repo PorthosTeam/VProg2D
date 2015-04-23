@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.desktop;
 
 /**
  * @description Stores the JDK version number and the directory to reach the
