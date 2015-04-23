@@ -117,12 +117,12 @@ class MainUI
            
            String text = "<html>"
                + "VProg2D is a visual game editor.<br/>"
-               + " It allows for flexibly creating simple games.</br>"
+               + " It allows for flexibly creating simple games.<br/>"
                + " Also this text needs improving!</html>";
            JLabel label = new JLabel(text);
            label.setBorder(margin);
            // Need this to ensure proper word-wrapping.
-           label.setSize(new Dimension(220, 300));
+           label.setSize(new Dimension(bounds.width, bounds.height));
            
            window.add(logo, BorderLayout.NORTH);
            window.add(label, BorderLayout.CENTER);
