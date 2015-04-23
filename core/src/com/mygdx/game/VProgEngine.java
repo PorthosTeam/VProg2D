@@ -147,24 +147,6 @@ public class VProgEngine extends ApplicationAdapter {
         // Store drawn circles
         circles = new Array<Circle>();
 
-        // Debug stuff
-        if (CREATE_DEBUG == true) {
-            Gdx.app.log("Test", "Testing");
-            JFrame frame = new JFrame("Create Project");
-            User testUser = new User("TestUser");
-            Project project = new Project();
-            // testUser.addProject(project);
-            frame.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosing(WindowEvent e) {
-                    System.exit(0);
-                }
-            });
-            frame.getContentPane().add(project);
-            frame.setSize(project.getPreferredSize());
-            frame.setVisible(true);
-        }
-
         // draw the default player
         playerInstance = new Player(0);
         rightBound -= playerInstance.width;

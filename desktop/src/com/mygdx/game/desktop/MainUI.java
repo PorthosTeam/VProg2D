@@ -3,6 +3,7 @@ package com.mygdx.game.desktop;
 // This file is the central hub of the 'primary' or 'editor' UI.
 
 // This is for grabbing available space for our window(s) on the screen.
+import com.badlogic.gdx.Gdx;
 import com.mygdx.game.WindowBoundsChecker;
 import java.awt.Rectangle;
 
@@ -17,6 +18,8 @@ import java.awt.Container;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -24,29 +27,34 @@ class MainUI
 {
     // This will hold the screen area available to us for our windows (we don't
     // want to open windows bigger than these bounds if we can avoid it).
-    private Rectangle screenBounds;
+    public static Rectangle screenBounds;
     
     // The actual editable game engine.
-    private VProgEngine vprog;
+    public static VProgEngine vprog;
+    
+    public Project newProject;
+    private boolean creating = false;
     
     // Actions for each of the menu buttons.
     private ActionListener newProjectAction = new ActionListener()
     {
         public void actionPerformed(ActionEvent e)
         {
-            String name = "blah";
-            vprog = new VProgEngine(name);
-            
-            LwjglApplicationConfiguration config
-                = new LwjglApplicationConfiguration();
-            config.title = name;
-            config.x = -1;
-            config.y = -1;
-            config.width = Math.min(screenBounds.width, 800);
-            config.height = Math.min(screenBounds.height, 600);
-            config.resizable = true;
-            config.allowSoftwareMode = true;
-            new LwjglApplication(vprog, config);
+            // Debug stuff
+            JFrame frame = new JFrame("Create Project");
+            frame.setLocationRelativeTo(null);
+            User testUser = new User("TestUser");
+            Project project = new Project();
+            // testUser.addProject(project);
+            frame.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            frame.getContentPane().add(project);
+            frame.setSize(project.getPreferredSize());
+            frame.setVisible(true);
         }
     };
     
