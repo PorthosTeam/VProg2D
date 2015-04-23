@@ -3,10 +3,10 @@
  M to set and play BGM, S to play a sound, P to save stuff, click to draw a circle 
  at the mouse position, E to spawn an enemy on the ground under the mouse.
 
-*'O' will start the first spawned enemy on patrol and 'I' will stop the
-patrol, assuming an enemy is spawned. B will randomly swap between backgrounds,
+ *'O' will start the first spawned enemy on patrol and 'I' will stop the
+ patrol, assuming an enemy is spawned. B will randomly swap between backgrounds,
 
-Lots of this needs to be hooked into the UI, among other things. 
+ Lots of this needs to be hooked into the UI, among other things. 
  - Trevor
  */
 package com.mygdx.game;
@@ -47,11 +47,11 @@ public class VProgEngine extends ApplicationAdapter {
     // global vars
     private String name;
     private boolean frozen = true;
-    
+
     // TODO 2015-04-22: This should NOT be static. But external classes link to
     // it. Should not be thus coupled. Will fix later.
     public static Preferences prefs;
-    
+
     // Asset Management -related variables.
     private AssetManager manager;
     public String assetLocation;
@@ -61,18 +61,18 @@ public class VProgEngine extends ApplicationAdapter {
     private Array<Texture> backgrounds;
     private Array<Texture> playerSprites;
     private Array<Texture> enemySprites;
-    
+
     // Player
     public Player playerInstance;
 
     // Enemies
     private Rectangle enemy;
     public Array<Enemy> enemies;
-    
+
     // Environment
     public static float ground = 36;
     public int bgIndex = 0;
-    
+
     // Text
     private BitmapFont text;
 
@@ -86,32 +86,32 @@ public class VProgEngine extends ApplicationAdapter {
 
     // The infamous node. If only we knew how to use it.
     private Node node;
-    
+
     // bounds of the game frame
     public int leftBound = 0;
     public int rightBound = WIDTH;
     SpriteBatch batch;
     Texture img;
-    
+
     Doodad doodad;
-    
+
     // This top constructor is valid, because you can then setName to pick your
     // instance name, but presently I can't think of a good reason to use it.
-    public VProgEngine(){}
-    public VProgEngine(String instanceName)
-    {
+    public VProgEngine() {
+    }
+
+    public VProgEngine(String instanceName) {
         this.setName(instanceName);
     }
 
     @Override
     public void create() {
-        this.loadEnginePrefs();
 
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         manager = new AssetManager();
         queuedAssetChaperone = new QueuedAssetChaperone(manager);
-        
+
         // load the pre-set assets for selection
         playerSprites = new Array<Texture>();
         playerSprites.add(new Texture(Gdx.files.internal("player.png")));
@@ -135,7 +135,7 @@ public class VProgEngine extends ApplicationAdapter {
         sounds.add(Gdx.audio.newSound(Gdx.files.internal("menu.wav")));
         bgms = new Array<Music>();
         bgms.add(Gdx.audio.newMusic(Gdx.files.internal("bgm1.ogg")));
-        
+
         // Text
         text = new BitmapFont();
         text.setColor(Color.RED);
@@ -145,14 +145,17 @@ public class VProgEngine extends ApplicationAdapter {
 
         // Store drawn circles
         circles = new Array<Circle>();
+        
+        this.loadEnginePrefs();
 
         // draw the default player
-        if (prefs.getInteger("player", -1) == -1)
+        if (prefs.getInteger("player", -1) == -1) {
             playerInstance = new Player(0);
-        else 
+        } else {
             playerInstance = new Player(prefs.getInteger("player"));
+        }
         rightBound -= playerInstance.width;
-        
+
         Doodad.setBatch(batch);
         doodad = new Doodad(50, 50, 50, 50, enemySprites.get(1));
     }
@@ -172,11 +175,9 @@ public class VProgEngine extends ApplicationAdapter {
     public void render() {
         // If manager still has queued assets...
         int queuedAssets = manager.getQueuedAssets();
-        if(queuedAssets != 0)
-        {
+        if (queuedAssets != 0) {
             // ..then keep loading them, and if done loading any assets...
-            if(manager.update() || queuedAssets > manager.getQueuedAssets())
-            {
+            if (manager.update() || queuedAssets > manager.getQueuedAssets()) {
                 // ..then check after the update for anything the chaperone had
                 // to do for each finished one.
                 queuedAssetChaperone.check();
@@ -189,11 +190,10 @@ public class VProgEngine extends ApplicationAdapter {
         // such as the game-object primitives' move() and collide() calls, so
         // that even as the "game" (libGDX application) is running, the game of
         // the user is "frozen".
-        if(frozen)
-        {
+        if (frozen) {
             return;
         }
-        
+
         Gdx.gl.glClearColor(.25f, .25f, .25f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -206,23 +206,24 @@ public class VProgEngine extends ApplicationAdapter {
 
         // draw the set player sprite at current location
         // monstrous method call but it's necessary for a simple texture flip
-        if(playerInstance.playerSpriteIndex >= 0 && playerInstance.playerSpriteIndex <= 2) {
+        if (playerInstance.playerSpriteIndex >= 0 && playerInstance.playerSpriteIndex <= 2) {
             batch.draw(playerSprites.get(playerInstance.playerSpriteIndex),
-                playerInstance.x, playerInstance.y, playerInstance.width, playerInstance.height, 0, 0,
-                (int) playerInstance.width, (int) playerInstance.height, playerInstance.left, false);
+                    playerInstance.x, playerInstance.y, playerInstance.width, playerInstance.height, 0, 0,
+                    (int) playerInstance.width, (int) playerInstance.height, playerInstance.left, false);
         }
 
         // render enemies
         for (Enemy currEnemy : enemies) {
             batch.draw(enemySprites.get(currEnemy.eType),
-                currEnemy.x, currEnemy.y, currEnemy.width, currEnemy.height, 0, 0,
-                (int) currEnemy.width, (int) currEnemy.height, !currEnemy.left, false);
+                    currEnemy.x, currEnemy.y, currEnemy.width, currEnemy.height, 0, 0,
+                    (int) currEnemy.width, (int) currEnemy.height, !currEnemy.left, false);
             if (currEnemy.isPatrolling()) {
                 currEnemy.update(Gdx.graphics.getDeltaTime());
             }
             // basic collision detection
-            if (playerInstance.x >= currEnemy.x - currEnemy.width/1.25 && playerInstance.x <= currEnemy.x + currEnemy.width/1.25 && playerInstance.y <= currEnemy.y + currEnemy.height/1.5 )
-                text.draw(batch, "OW", WIDTH/2, HEIGHT/1.25f);
+            if (playerInstance.x >= currEnemy.x - currEnemy.width / 1.25 && playerInstance.x <= currEnemy.x + currEnemy.width / 1.25 && playerInstance.y <= currEnemy.y + currEnemy.height / 1.5) {
+                text.draw(batch, "OW", WIDTH / 2, HEIGHT / 1.25f);
+            }
         }
         doodad.draw();
         batch.end();
@@ -238,9 +239,9 @@ public class VProgEngine extends ApplicationAdapter {
         }
 
         // Player jump
-        if(Gdx.input.isKeyJustPressed(Keys.SPACE)
-        || Gdx.input.isKeyJustPressed(Keys.W)
-        || Gdx.input.isKeyJustPressed(Keys.UP)) {
+        if (Gdx.input.isKeyJustPressed(Keys.SPACE)
+                || Gdx.input.isKeyJustPressed(Keys.W)
+                || Gdx.input.isKeyJustPressed(Keys.UP)) {
             if (playerInstance.jumpReady == true) {
                 playSound(0);
                 playerInstance.jumpReady = false;
@@ -304,17 +305,18 @@ public class VProgEngine extends ApplicationAdapter {
 
         // spawn an enemy on the ground
         if (Gdx.input.isKeyJustPressed(Keys.E)) {
-            enemies.add(new Enemy(new Random().nextInt(2), Gdx.input.getX(), (int) ground));
+            int enemType = new Random().nextInt(2);
+            addEnemy(enemType, (int)Gdx.input.getX(), (int)ground);
         }
-        
+
         // set first enemy to patrolling
         if (Gdx.input.isKeyJustPressed(Keys.O)) {
             if (enemies.size > 0) {
-            Enemy e = enemies.get(0);
-            e.SetPatrolPoints(e.x - 100, e.x + 100);
+                Enemy e = enemies.get(0);
+                e.SetPatrolPoints(e.x - 100, e.x + 100);
             }
         }
-        
+
         // stop  first enemy from patrolling
         if (Gdx.input.isKeyJustPressed(Keys.I)) {
             if (enemies.size > 0) {
@@ -338,10 +340,11 @@ public class VProgEngine extends ApplicationAdapter {
 
         // Change background
         if (Gdx.input.isKeyJustPressed(Keys.B)) {
-            if (backgrounds.size == 4)
+            if (backgrounds.size == 4) {
                 bgIndex = new Random().nextInt(4);
-            else
+            } else {
                 bgIndex = new Random().nextInt(5);
+            }
         }
 
         // make sure the player stays within the screen bounds
@@ -361,16 +364,21 @@ public class VProgEngine extends ApplicationAdapter {
         shapeRenderer.dispose();
         manager.dispose();
         text.dispose();
-        for (Texture e : playerSprites)
+        for (Texture e : playerSprites) {
             e.dispose();
-        for (Texture e : enemySprites)
+        }
+        for (Texture e : enemySprites) {
             e.dispose();
-        for (Texture e : backgrounds)
+        }
+        for (Texture e : backgrounds) {
             e.dispose();
-        for (Sound e : sounds)
+        }
+        for (Sound e : sounds) {
             e.dispose();
-        for (Music e : bgms)
+        }
+        for (Music e : bgms) {
             e.dispose();
+        }
     }
 
     @Override
@@ -384,38 +392,49 @@ public class VProgEngine extends ApplicationAdapter {
     @Override
     public void resume() {
     }
-    
+
     // This section contains numerous functions exposed to allow the UI to
     // manage the VProgEngine.
-    public void run()
-    {
+    public void run() {
         this.frozen = false;
     }
-    public void freeze()
-    {
+
+    public void freeze() {
         this.frozen = true;
     }
-    
+
     // save editor state (only saves player sprite atm)
-    public void saveEnginePrefs()
-    {
+    public void saveEnginePrefs() {
         prefs.flush();
     }
-    
+
+    public void addEnemy(int etype, int pos, int ground) {
+        enemies.add(new Enemy(etype, pos, ground));
+        prefs.putString("Enemy" + String.valueOf(enemies.size), String.valueOf(etype) + ";" + String.valueOf(pos) + ";" + String.valueOf(ground));
+    }
+
     // Get/initialize game preferences/state. Details documented at:
     // https://github.com/libgdx/libgdx/wiki/Preferences
-    public void loadEnginePrefs()
-    {
+    public void loadEnginePrefs() {
         prefs = Gdx.app.getPreferences(name);
+        String enemyBuffer;
+        int [] enemyArr= new int[3];
+        for (int i = 1; !(prefs.getString("Enemy" + i, "").equals("")); i++) {
+            int j = 0;
+            enemyBuffer = prefs.getString("Enemy" + i);
+            for (String retval: enemyBuffer.split(";")) {
+                enemyArr[j] = Integer.parseInt(retval);
+                j++;
+            }
+            addEnemy(enemyArr[0], enemyArr[1], enemyArr[2]);
+        }
     }
-    
-    public void setName(String newName)
-    {
+
+    public void setName(String newName) {
         name = newName;
     }
-    
-    public void loadTexture(String filepath)
-    {
+
+    public void loadTexture(String filepath) {
         // This just starts the queuing - the bulk of the work is done by the
         // QueuedAssetChaperone and the callback assigned it it.
         manager.load(filepath, Texture.class);
