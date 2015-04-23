@@ -175,7 +175,10 @@ class MainUI
         
         JFrame wrapperFrame = new JFrame("VProg2D");
         
-        wrapperFrame.setBounds(bounds);
+        Rectangle adjustedBounds = new Rectangle(bounds);
+        adjustedBounds.width = Math.min(bounds.width, 800);
+        adjustedBounds.height = Math.min(bounds.width, 480);
+        wrapperFrame.setBounds(adjustedBounds);
         wrapperFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         Container frameContainer = wrapperFrame.getContentPane();
