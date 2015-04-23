@@ -10,7 +10,6 @@ import java.awt.Rectangle;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mygdx.game.VProgEngine;
-import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Gdx;
 import com.mygdx.game.Callback;
 
@@ -35,7 +34,9 @@ public class MainUI
     public static VProgEngine vprog;
     
     public Project newProject;
-    private Preferences prefsUI;
+    
+    // existing projects list
+    
     
     // Actions for each of the menu buttons.
     private ActionListener newProjectAction = new ActionListener()
@@ -65,7 +66,7 @@ public class MainUI
         public void actionPerformed(ActionEvent e)
         {
            // Open previous game frame
-            prefsUI = Gdx.app.getPreferences("Test");
+            
             MainUI.vprog = new VProgEngine("Test");
 
             LwjglApplicationConfiguration config
