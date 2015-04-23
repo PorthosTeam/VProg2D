@@ -51,6 +51,8 @@ public class VProgEngine extends ApplicationAdapter {
 
     // global vars
     private String name;
+    private boolean paused = true;
+    
     // TODO 2015-04-22: This should NOT be static. But external classes link to
     // it. Should not be thus coupled. Will fix later.
     public static Preferences prefs;
