@@ -4,16 +4,15 @@ package com.mygdx.game.desktop;
 // This is for grabbing available space for our window(s) on the screen.
 import com.mygdx.game.WindowBoundsChecker;
 import java.awt.Rectangle;
-import java.util.ArrayList;
 
 // This is for the editable-game engine.
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mygdx.game.VProgEngine;
-//import com.badlogic.gdx.Gdx;
 import com.mygdx.game.Callback;
 
 // This is for the graphical user interface.
+import java.util.ArrayList;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.BorderLayout;
@@ -26,7 +25,6 @@ import java.io.File;
 import java.io.FileReader;
 import javax.swing.*;
 import java.io.IOException;
-//import javax.swing.border.EmptyBorder;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
