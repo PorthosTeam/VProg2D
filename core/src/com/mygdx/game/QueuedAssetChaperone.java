@@ -15,9 +15,6 @@ package com.mygdx.game;
 // callback - the callback is the thing that has to ensure the asset is handled
 // correctly.)
 
-// Thus, we have this class. The naming of members and the commenting style we
-// can blame on Alex's sleep deprivation.
-
 import com.badlogic.gdx.assets.AssetManager;
 // The libGDX array class seems to be thread safe in all the ways it's being
 // used by the chaperone.
@@ -36,10 +33,10 @@ class QueuedAssetChaperone
         callbacks = new Array<Callback>();
     }
     
-    // Entrust the asset chaperone with monitoring the asset. Assets are keyed
-    // by name in this, just as they are in AssetManager itself. Callback is a
-    // functor which is to simply be invoked when the asset is finally loaded.
-    public void entrustAsset(String asset, Callback callback)
+    // Add asset to list of assets to monitor. Assets are keyed by name in this,
+    // just as they are in AssetManager itself. Callback is a functor which is
+    // to simply be invoked when the asset is finally loaded.
+    public void add(String asset, Callback callback)
     {
         assets.add(asset);
         callbacks.add(callback);
