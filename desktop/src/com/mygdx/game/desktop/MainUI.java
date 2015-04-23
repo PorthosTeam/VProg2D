@@ -22,6 +22,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import com.badlogic.gdx.Preferences;
 
 class MainUI
 {
@@ -33,14 +34,14 @@ class MainUI
     public static VProgEngine vprog;
     
     public Project newProject;
-    private boolean creating = false;
+    private Preferences prefsUI;
     
     // Actions for each of the menu buttons.
     private ActionListener newProjectAction = new ActionListener()
     {
         public void actionPerformed(ActionEvent e)
         {
-            // Debug stuff
+            // New game project
             JFrame frame = new JFrame("Create Project");
             frame.setLocationRelativeTo(null);
             User testUser = new User("TestUser");
@@ -62,7 +63,20 @@ class MainUI
     {
         public void actionPerformed(ActionEvent e)
         {
-           System.out.print("Load Project Action\n"); 
+           // Open previous game frame
+            prefsUI = Gdx.app.getPreferences("Test");
+            MainUI.vprog = new VProgEngine("Test");
+
+            LwjglApplicationConfiguration config
+                    = new LwjglApplicationConfiguration();
+            config.title = "Test";
+            config.x = -1;
+            config.y = -1;
+            config.width = Math.min(MainUI.screenBounds.width, 800);
+            config.height = Math.min(MainUI.screenBounds.height, 600);
+            config.resizable = true;
+            config.allowSoftwareMode = true;
+            new LwjglApplication(MainUI.vprog, config);
         }
     };
     

@@ -148,7 +148,10 @@ public class VProgEngine extends ApplicationAdapter {
         circles = new Array<Circle>();
 
         // draw the default player
-        playerInstance = new Player(0);
+        if (prefs.getInteger("player", -1) == -1)
+            playerInstance = new Player(0);
+        else 
+            playerInstance = new Player(prefs.getInteger("player"));
         rightBound -= playerInstance.width;
     }
 

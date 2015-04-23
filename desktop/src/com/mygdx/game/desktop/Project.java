@@ -84,14 +84,15 @@ public class Project extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         // Find system's JDK, if present / installed correctly
-        if (System.getenv("JAVA_HOME") == null) {
+        /*if (System.getenv("JAVA_HOME") == null) {
             JOptionPane
                     .showMessageDialog(
                             null,
                             "Your JAVA_HOME variable is not set. Please make sure you installed the JDK on your system correctly",
                             "No JDK Found", 0);
-        } // Check project name
-        else if (projName.getText().equals("")) {
+        } */
+        // Check project name
+        if (projName.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Please enter a project name",
                     "Error", 0);
         } // Check project directory
@@ -100,9 +101,9 @@ public class Project extends JPanel implements ActionListener {
                     "Please specify a project directory", "Error", 0);
         } // Everything verified, creating project
         else {
-            String jdkDir = System.getenv("JAVA_HOME");
-            String version = System.getProperty("java.specification.version");
-            jdk = new JDK(jdkDir, version);
+            //String jdkDir = System.getenv("JAVA_HOME");
+            //String version = System.getProperty("java.specification.version");
+            //jdk = new JDK(jdkDir, version);
             title = projName.getText();
             // Open game frame
             MainUI.vprog = new VProgEngine(title);
