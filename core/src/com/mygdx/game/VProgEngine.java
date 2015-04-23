@@ -51,7 +51,7 @@ public class VProgEngine extends ApplicationAdapter {
 
     // global vars
     private String name;
-    private boolean paused = true;
+    private boolean frozen = true;
     
     // TODO 2015-04-22: This should NOT be static. But external classes link to
     // it. Should not be thus coupled. Will fix later.
@@ -183,7 +183,14 @@ public class VProgEngine extends ApplicationAdapter {
 
     @Override
     public void render() {
-        if(paused)
+        // In the long run we will want this AFTER all of the 'draw' updates and
+        // AFTER all of the editor-level code (e.g. if we let the user drag/drop
+        // in the game UI as part of editing, as opposed to as part of play).
+        // But then we want this BEFORE any in-game game mechanics state changes
+        // such as the game-object primitives' move() and collide() calls, so
+        // that even as the "game" (libGDX application) is running, the game of
+        // the user is "frozen".
+        if(frozen)
         {
             return;
         }
@@ -388,6 +395,14 @@ public class VProgEngine extends ApplicationAdapter {
     
     // This section contains numerous functions exposed to allow the UI to
     // manage the VProgEngine.
+    public void run()
+    {
+        this.frozen = false;
+    }
+    public void freeze()
+    {
+        this.frozen = true;
+    }
     
     // save editor state (only saves player sprite atm)
     public void saveEnginePrefs()

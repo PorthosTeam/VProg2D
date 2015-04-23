@@ -88,7 +88,15 @@ class MainUI
     {
         public void actionPerformed(ActionEvent e)
         {
-           System.out.print("Run Program Action\n"); 
+            vprog.run();
+        }
+    };
+    
+    private ActionListener freezeProgramAction = new ActionListener()
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+            vprog.freeze();
         }
     };
     
@@ -161,6 +169,7 @@ class MainUI
         projectMenu.add("Construct", "construct_small.png", constructAction);
         projectMenu.add("Test", "test_small.png", testAction);
         projectMenu.add("Run", "runProgram_small.png", runProgramAction);
+        projectMenu.add("Freeze", "runProgram_small.png", freezeProgramAction);
         menuBar.add(projectMenu.jMenu());
         
         JMenuHelper helpMenu = new JMenuHelper("Help");
