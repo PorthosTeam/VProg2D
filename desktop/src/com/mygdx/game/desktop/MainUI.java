@@ -72,7 +72,11 @@ class MainUI
     {
         public void actionPerformed(ActionEvent e)
         {
-           System.out.print("Construct Action\n"); 
+            // I'm thinking this is a mix of the Freeze action, and entering
+            // into a different "mode" in the VProgEngine which will allow you
+            // to edit elements in the game UI directly. (BIG MAYBE, LOTS OF
+            // WORK TO DO.)
+            vprog.freeze();
         }
     };
     
