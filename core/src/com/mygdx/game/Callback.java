@@ -2,7 +2,7 @@ package com.mygdx.game;
 
 // Callback interface. Because Java has no sane way to pass callbacks.
 
-interface Callback
+public interface Callback
 {
  void call();
 }
