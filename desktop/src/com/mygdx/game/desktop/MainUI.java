@@ -12,6 +12,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mygdx.game.VProgEngine;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Gdx;
+import com.mygdx.game.Callback;
 
 // This is for the graphical user interface.
 import java.awt.Component;
@@ -24,7 +25,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-class MainUI
+public class MainUI
 {
     // This will hold the screen area available to us for our windows (we don't
     // want to open windows bigger than these bounds if we can avoid it).
@@ -208,14 +209,23 @@ class MainUI
                 return;
             }
             java.io.File file = fileChooser.getSelectedFile();
+            String filepath;
             try
             {
-                vprog.loadTexture(file.getCanonicalPath());
+                filepath = file.getCanonicalPath();
             }
             catch(java.io.IOException ex)
             {
                 ErrorFrame errorFrame = new ErrorFrame(ex);
+                return;
             }
+            vprog.queuedAssetChaperone.add(filepath, new Callback() {
+                public void call()
+                {
+                    System.out.println("LOADED OMFG!");
+                }
+            });
+            vprog.loadTexture(filepath);
         }
     };
 }
