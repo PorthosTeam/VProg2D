@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.border.EmptyBorder;
 
-class ErrorFrame extends JFrame
+public class ErrorFrame extends JFrame
 {
     public ErrorFrame(Exception exception)
     {

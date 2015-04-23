@@ -3,7 +3,7 @@ package com.mygdx.game.desktop;
 import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 
-class JMenuHelper
+public class JMenuHelper
 {
     private JMenu jMenu;
     

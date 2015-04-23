@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.border.EmptyBorder;
 
-class AboutFrame extends JFrame
+public class AboutFrame extends JFrame
 {
     public AboutFrame()
     {

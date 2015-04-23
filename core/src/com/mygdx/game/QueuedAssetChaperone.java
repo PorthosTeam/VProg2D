@@ -20,7 +20,7 @@ import com.badlogic.gdx.assets.AssetManager;
 // used by the chaperone.
 import com.badlogic.gdx.utils.Array;
 
-class QueuedAssetChaperone
+public class QueuedAssetChaperone
 {
     private AssetManager manager;
     private Array<String> assets;
