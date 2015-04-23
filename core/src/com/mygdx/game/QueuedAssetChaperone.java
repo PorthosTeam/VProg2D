@@ -32,6 +32,8 @@ class QueuedAssetChaperone
     public QueuedAssetChaperone(AssetManager _manager)
     {
         manager = _manager;
+        assets = new Array<String>();
+        callbacks = new Array<Callback>();
     }
     
     // Entrust the asset chaperone with monitoring the asset. Assets are keyed
