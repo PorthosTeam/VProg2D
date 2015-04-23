@@ -6,19 +6,19 @@ package com.mygdx.game;
 // objects.
 
 // It's essentially just a Rectangle, with a reference to a Texture and to a
-// SpriteBatch.
+// Batch.
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 
 public class Doodad extends Rectangle implements Drawable
 {
     // Internal references to the bare minumums needed to be able to render
     // itself:
-    // The SpriteBatch these are all 'draw()'n onto. Currently no usecase for
+    // The Batch these are all 'draw()'n onto. Currently no usecase for
     // having more than one for the entire class, so making static.
-    private static SpriteBatch spriteBatch;
+    private static Batch batch;
     // The texture to use during the draw.
     private Texture texture;
     
@@ -45,14 +45,14 @@ public class Doodad extends Rectangle implements Drawable
     }
     
     // This needs to just be called once for the class as a whole, to set the
-    // master SpriteBatch that these are all drawn on.
-    public static void setSpriteBatch(SpriteBatch _spriteBatch)
+    // master Batch that these are all drawn on.
+    public static void setBatch(Batch _batch)
     {
-        spriteBatch = _spriteBatch;
+        batch = _batch;
     }
     
     public void draw()
     {
-        spriteBatch.draw(texture, this.x, this.y, this.width, this.height);
+        batch.draw(texture, this.x, this.y, this.width, this.height);
     }
 }
