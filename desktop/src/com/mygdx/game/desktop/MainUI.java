@@ -3,7 +3,6 @@ package com.mygdx.game.desktop;
 // This file is the central hub of the 'primary' or 'editor' UI.
 
 // This is for grabbing available space for our window(s) on the screen.
-import com.badlogic.gdx.Gdx;
 import com.mygdx.game.WindowBoundsChecker;
 import java.awt.Rectangle;
 
@@ -11,6 +10,8 @@ import java.awt.Rectangle;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mygdx.game.VProgEngine;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.Gdx;
 
 // This is for the graphical user interface.
 import java.awt.Component;
@@ -21,11 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.*;
-<<<<<<< HEAD
 import javax.swing.border.EmptyBorder;
-import com.badlogic.gdx.Preferences;
-=======
->>>>>>> origin/master
 
 class MainUI
 {
