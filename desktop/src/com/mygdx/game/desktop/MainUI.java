@@ -12,11 +12,13 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mygdx.game.VProgEngine;
 
 // This is for the graphical user interface.
+import java.awt.Dimension;
 import java.awt.Container;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 class MainUI
 {
@@ -94,7 +96,38 @@ class MainUI
     {
         public void actionPerformed(ActionEvent e)
         {
-           System.out.print("Help About Action\n"); 
+           JFrame window = new JFrame("About VProg2D");
+           
+           Rectangle bounds = new Rectangle();
+           bounds.width = Math.min(220, screenBounds.width);
+           bounds.height = Math.min(300, screenBounds.height);
+           bounds.x = (screenBounds.width - screenBounds.x) / 2
+               + screenBounds.x - (bounds.width / 2);
+           bounds.y = (screenBounds.height - screenBounds.y) / 2
+               + screenBounds.y - (bounds.height / 2);
+           window.setBounds(bounds);
+           
+           window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+           
+           EmptyBorder margin = new EmptyBorder(10, 10, 10, 10);
+           
+           ImageIcon logoIcon = new ImageIcon("logo_small.png");
+           JLabel logo = new JLabel(logoIcon);
+           logo.setBorder(margin);
+           
+           String text = "<html>"
+               + "VProg2D is a visual game editor.<br/>"
+               + " It allows for flexibly creating simple games.</br>"
+               + " Also this text needs improving!</html>";
+           JLabel label = new JLabel(text);
+           label.setBorder(margin);
+           // Need this to ensure proper word-wrapping.
+           label.setSize(new Dimension(220, 300));
+           
+           window.add(logo, BorderLayout.NORTH);
+           window.add(label, BorderLayout.CENTER);
+           
+           window.setVisible(true);
         }
     };
     
