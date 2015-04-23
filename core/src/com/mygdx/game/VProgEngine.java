@@ -42,9 +42,6 @@ import com.badlogic.gdx.graphics.Color;
 
 public class VProgEngine extends ApplicationAdapter {
 
-    // Test create project module
-    private boolean CREATE_DEBUG = false;
-    
     public static int WIDTH = 800, HEIGHT = 600;
 
     // global vars
@@ -170,6 +167,18 @@ public class VProgEngine extends ApplicationAdapter {
 
     @Override
     public void render() {
+        // If manager still has queued assets...
+        int queuedAssets = manager.getQueuedAssets();
+        if(queuedAssets != 0)
+        {
+            // ..then keep loading them, and if done loading any assets...
+            if(manager.update() || queuedAssets > manager.getQueuedAssets())
+            {
+                // ..then check after the update for anything the chaperone had
+                // to do for each finished one.
+                queuedAssetChaperone.check();
+            }
+        }
         // In the long run we will want this AFTER all of the 'draw' updates and
         // AFTER all of the editor-level code (e.g. if we let the user drag/drop
         // in the game UI as part of editing, as opposed to as part of play).
@@ -404,6 +413,8 @@ public class VProgEngine extends ApplicationAdapter {
     
     public void loadTexture(String filepath)
     {
+        // This just starts the queuing - the bulk of the work is done by the
+        // QueuedAssetChaperone and the callback assigned it it.
         manager.load(filepath, Texture.class);
     }
 }
