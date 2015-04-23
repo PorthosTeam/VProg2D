@@ -3,9 +3,8 @@
  M to set and play BGM, S to play a sound, P to save stuff, click to draw a circle 
  at the mouse position, E to spawn an enemy on the ground under the mouse.
 
-**NEW- 'O' will start the first spawned enemy on patrol and 'I' will stop the
+*'O' will start the first spawned enemy on patrol and 'I' will stop the
 patrol, assuming an enemy is spawned. B will randomly swap between backgrounds,
-and '5' will dynamically load the bg5 background from the set path in bg5Path.**
 
 Lots of this needs to be hooked into the UI, among other things. 
  - Trevor
@@ -45,7 +44,6 @@ public class VProgEngine extends ApplicationAdapter {
 
     // Test create project module
     private boolean CREATE_DEBUG = false;
-    private String bg5Path = "F:/data/bg5.png";
     
     public static int WIDTH = 800, HEIGHT = 600;
 
@@ -57,9 +55,10 @@ public class VProgEngine extends ApplicationAdapter {
     // it. Should not be thus coupled. Will fix later.
     public static Preferences prefs;
     
-    // location of an uploaded asset
-    AssetManager manager;
+    // Asset Management -related variables.
+    private AssetManager manager;
     public String assetLocation;
+    public QueuedAssetChaperone queuedAssetChaperone;
 
     // Game assets
     private Array<Texture> backgrounds;
@@ -97,6 +96,8 @@ public class VProgEngine extends ApplicationAdapter {
     SpriteBatch batch;
     Texture img;
     
+    Doodad doodad;
+    
     // This top constructor is valid, because you can then setName to pick your
     // instance name, but presently I can't think of a good reason to use it.
     public VProgEngine(){}
@@ -112,6 +113,7 @@ public class VProgEngine extends ApplicationAdapter {
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
         manager = new AssetManager();
+        queuedAssetChaperone = new QueuedAssetChaperone(manager);
         
         // load the pre-set assets for selection
         playerSprites = new Array<Texture>();
@@ -153,6 +155,9 @@ public class VProgEngine extends ApplicationAdapter {
         else 
             playerInstance = new Player(prefs.getInteger("player"));
         rightBound -= playerInstance.width;
+        
+        Doodad.setBatch(batch);
+        doodad = new Doodad(50, 50, 50, 50, enemySprites.get(1));
     }
 
     // set the bgm music (also plays it)
@@ -185,7 +190,6 @@ public class VProgEngine extends ApplicationAdapter {
 
         // basic UI
         batch.begin();
-        //batch.draw(logo, Gdx.graphics.getWidth() / 2 - logo.getWidth() / 2, Gdx.graphics.getHeight() - logo.getHeight());
 
         // draw assets
         // draw the background
@@ -211,6 +215,7 @@ public class VProgEngine extends ApplicationAdapter {
             if (playerInstance.x >= currEnemy.x - currEnemy.width/1.25 && playerInstance.x <= currEnemy.x + currEnemy.width/1.25 && playerInstance.y <= currEnemy.y + currEnemy.height/1.5 )
                 text.draw(batch, "OW", WIDTH/2, HEIGHT/1.25f);
         }
+        doodad.draw();
         batch.end();
 
         // Player movement at set speed
@@ -329,13 +334,6 @@ public class VProgEngine extends ApplicationAdapter {
             else
                 bgIndex = new Random().nextInt(5);
         }
-        
-        if (Gdx.input.isKeyPressed(Keys.NUM_5)) {
-            manager.load(bg5Path, Texture.class);
-            manager.update();
-            manager.finishLoading();
-            backgrounds.add(manager.get(bg5Path, Texture.class));
-        }
 
         // make sure the player stays within the screen bounds
         if (playerInstance.x < leftBound) {
@@ -405,5 +403,10 @@ public class VProgEngine extends ApplicationAdapter {
     public void setName(String newName)
     {
         name = newName;
+    }
+    
+    public void loadTexture(String filepath)
+    {
+        manager.load(filepath, Texture.class);
     }
 }

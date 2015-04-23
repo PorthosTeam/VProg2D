@@ -4,7 +4,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import javax.swing.ImageIcon;
 
-public final class JMenuItemHelper
+final class JMenuItemHelper
 {
     private JMenuItemHelper(){}
     
