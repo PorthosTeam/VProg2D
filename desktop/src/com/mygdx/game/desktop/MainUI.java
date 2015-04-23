@@ -107,6 +107,11 @@ class MainUI
                + screenBounds.y - (bounds.height / 2);
            window.setBounds(bounds);
            
+           // For certain likely-to-be-used-often frames it would make sense to
+           // open them once and set close operation to the do-nothing one, so
+           // as to not go through the whole create/destroy cycle each time. But
+           // this window is unlikely to be visited often enough to warrant
+           // keeping it around in memory.
            window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
            
            EmptyBorder margin = new EmptyBorder(10, 10, 10, 10);
