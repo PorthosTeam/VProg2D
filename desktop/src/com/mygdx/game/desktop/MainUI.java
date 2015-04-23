@@ -44,41 +44,42 @@ public class MainUI {
     public Project newProject;
     public ArrayList<String> projectNames;
     String selectedProject;
+    JFrame frame;
 
     // existing projects list
     // Actions for each of the menu buttons.
+    
+    // Create new project
     private ActionListener newProjectAction = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            // New game project
+            // New game project dialog
             JFrame frame = new JFrame("Create Project");
             frame.setLocationRelativeTo(null);
             User testUser = new User("TestUser");
             Project project = new Project();
             // testUser.addProject(project);
-            frame.addWindowListener(new WindowAdapter() {
-                @Override
-                public void windowClosing(WindowEvent e) {
-                    System.exit(0);
-                }
-            });
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.getContentPane().add(project);
             frame.setSize(project.getPreferredSize());
             frame.setVisible(true);
         }
     };
 
+    // Load a saved project
     private ActionListener loadProjectAction = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             // Open previous game frame
-            JFrame frame = new JFrame("Load Project");
+            frame = new JFrame("Load Project");
             frame.setLocationRelativeTo(null);
             frame.setSize(new Dimension(300, 300));
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             Container contentPane = frame.getContentPane();
             final JLabel label = new JLabel("Projects");
+            // locate relative JAR/class location for project storage
             String dirString = Project.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+            // load the project names from the global projects file
             projectNames = new ArrayList<String>();
             try {
                 File projFile = new File(dirString + "Projects.txt");
@@ -89,13 +90,15 @@ public class MainUI {
                 }
             } catch (IOException ioe) {
             }
+            // populate selection list
             String[] projNamesArr = new String[projectNames.size()];
             projNamesArr = projectNames.toArray(projNamesArr);
             final JList dataList = new JList(projNamesArr);
             contentPane.add(dataList, BorderLayout.NORTH);
             final JButton loadButton = new JButton("Load Project (None Selected)");
             contentPane.add(loadButton, BorderLayout.SOUTH);
-
+            
+            // track selection
             dataList.addListSelectionListener(new ListSelectionListener() {
 
                 @Override
@@ -106,6 +109,9 @@ public class MainUI {
                     }
                 }
             });
+            frame.setVisible(true);
+            
+            // open a project once a project is selected
             loadButton.addActionListener(new ActionListener() {
 
                 @Override
@@ -114,6 +120,9 @@ public class MainUI {
                         System.out.println("No project selected.");
                     } else {
                         // load selected project
+                        if (MainUI.vprog != null)
+                            MainUI.vprog.closeGame();
+                        
                         MainUI.vprog = new VProgEngine(selectedProject);
 
                         LwjglApplicationConfiguration config
@@ -126,11 +135,10 @@ public class MainUI {
                         config.resizable = true;
                         config.allowSoftwareMode = true;
                         new LwjglApplication(MainUI.vprog, config);
+                        frame.dispose();
                     }
                 }
             });
-
-            frame.setVisible(true);
 
         }
     };
@@ -140,7 +148,7 @@ public class MainUI {
         public void actionPerformed(ActionEvent e) {
             // If libgdx's prefs.flush() returns a success or failure, we should
             // provide the user some 'save succesful'/'save failed' feedback.
-            vprog.saveEnginePrefs();
+            vprog.saveScene();
         }
     };
 
@@ -206,7 +214,7 @@ public class MainUI {
         projectMenu.add("Construct", "construct_small.png", constructAction);
         projectMenu.add("Test", "test_small.png", testAction);
         projectMenu.add("Run", "runProgram_small.png", runProgramAction);
-        projectMenu.add("Freeze", "runProgram_small.png", freezeProgramAction);
+        projectMenu.add("Freeze", "pauseProgram_small.png", freezeProgramAction);
         menuBar.add(projectMenu.jMenu());
 
         JMenuHelper helpMenu = new JMenuHelper("Help");

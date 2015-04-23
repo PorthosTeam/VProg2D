@@ -31,11 +31,25 @@ public class Player extends Rectangle {
         height = 80;
     }
     
+    // load default player
     public Player(int sprite) {
         //super();
         playerSpriteIndex = sprite;
         width = 56;
         height = 80;
+    }
+    
+    // load player with specific attributes
+    public Player(int sprite, int xIn, int yIn, int hs, int vs, int jh) {
+        //super();
+        playerSpriteIndex = sprite;
+        width = 56;
+        height = 80;
+        x = xIn;
+        y = yIn;
+        hSpeed = hs;
+        vSpeed = vs;
+        jumpHeight = jh;
     }
     
     // swaps between the pre-set player sprites

@@ -6,6 +6,9 @@
  *'O' will start the first spawned enemy on patrol and 'I' will stop the
  patrol, assuming an enemy is spawned. B will randomly swap between backgrounds,
 
+**NEW - 0 will save an entire scene (for the most part), which will be loaded with 
+Load Project **
+
  Lots of this needs to be hooked into the UI, among other things. 
  - Trevor
  */
@@ -81,6 +84,7 @@ public class VProgEngine extends ApplicationAdapter {
     private ShapeRenderer shapeRenderer;
     public Array<Circle> circles;
 
+    // Audio assets
     private Array<Sound> sounds;
     private Array<Music> bgms;
 
@@ -146,15 +150,8 @@ public class VProgEngine extends ApplicationAdapter {
         // Store drawn circles
         circles = new Array<Circle>();
         
+        // load up data structures after initializing all fo them
         this.loadEnginePrefs();
-
-        // draw the default player
-        if (prefs.getInteger("player", -1) == -1) {
-            playerInstance = new Player(0);
-        } else {
-            playerInstance = new Player(prefs.getInteger("player"));
-        }
-        rightBound -= playerInstance.width;
 
         Doodad.setBatch(batch);
         doodad = new Doodad(50, 50, 50, 50, enemySprites.get(1));
@@ -285,7 +282,8 @@ public class VProgEngine extends ApplicationAdapter {
         if (Gdx.input.isKeyJustPressed(Keys.S)) {
             playSound(0);
         }
-
+        
+        // save scene
         if (Gdx.input.isKeyJustPressed(Keys.P)) {
             this.saveEnginePrefs();
         }
@@ -295,7 +293,7 @@ public class VProgEngine extends ApplicationAdapter {
          handling with touchDown for a more discrete capture so only 
          one circle is drawn at a time which is probably better in this
          case. */
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.isButtonPressed(Keys.LEFT)) {
             //Vector2 touchPos = new Vector2();
             //touchPos.set(Gdx.input.getX(), Gdx.input.getY());
             // ShapeRenderer has an unintuitive way of using the Y value
@@ -303,17 +301,17 @@ public class VProgEngine extends ApplicationAdapter {
             circles.add(newCircle);
         }
 
-        // spawn an enemy on the ground
+        // spawn a random enemy on the ground
         if (Gdx.input.isKeyJustPressed(Keys.E)) {
             int enemType = new Random().nextInt(2);
-            addEnemy(enemType, (int)Gdx.input.getX(), (int)ground);
+            addEnemy(enemType, (int) Gdx.input.getX(), (int) ground, 0, 0, 0, 150);
         }
 
         // set first enemy to patrolling
         if (Gdx.input.isKeyJustPressed(Keys.O)) {
             if (enemies.size > 0) {
                 Enemy e = enemies.get(0);
-                e.SetPatrolPoints(e.x - 100, e.x + 100);
+                e.SetPatrolPoints((int)e.x - 100, (int)e.x + 100);
             }
         }
 
@@ -322,6 +320,11 @@ public class VProgEngine extends ApplicationAdapter {
             if (enemies.size > 0) {
                 enemies.get(0).stopPatrol();
             }
+        }
+        
+        // save the scene
+        if (Gdx.input.isKeyJustPressed(Keys.NUM_0)) {
+            saveScene();
         }
 
         // render circles
@@ -336,6 +339,11 @@ public class VProgEngine extends ApplicationAdapter {
         if (Gdx.input.isKeyJustPressed(Keys.R)) {
             circles.clear();
             enemies.clear();
+            for (int i = 1; prefs.contains("Enemy" + String.valueOf(i)); i++) {
+                prefs.remove("Enemy" + String.valueOf(i));
+                System.out.println("Enemy" + String.valueOf(i));
+            }
+            saveEnginePrefs();
         }
 
         // Change background
@@ -354,6 +362,14 @@ public class VProgEngine extends ApplicationAdapter {
         if (playerInstance.x > rightBound) {
             playerInstance.x = rightBound;
         }
+    }
+    
+    // add patrol behavior to a specific enemy
+    public void addPatrol(int enemy) {
+        if (enemies.size > enemy) {
+                Enemy e = enemies.get(enemy);
+                e.SetPatrolPoints((int)e.x - 100, (int)e.x + 100);
+            }
     }
 
     @Override
@@ -403,31 +419,77 @@ public class VProgEngine extends ApplicationAdapter {
         this.frozen = true;
     }
 
-    // save editor state (only saves player sprite atm)
+    // save editor state
     public void saveEnginePrefs() {
         prefs.flush();
     }
 
-    public void addEnemy(int etype, int pos, int ground) {
-        enemies.add(new Enemy(etype, pos, ground));
-        prefs.putString("Enemy" + String.valueOf(enemies.size), String.valueOf(etype) + ";" + String.valueOf(pos) + ";" + String.valueOf(ground));
+    // add an enemy from the preferences
+    public void addEnemy(int etype, int pos, int ground, int pp1, int pp2, int pat, int speed) {
+        enemies.add(new Enemy(etype, pos, ground, pp1, pp2, pat, speed));
+        prefs.putString("Enemy" + String.valueOf(enemies.size), String.valueOf(etype) + ";" + String.valueOf(pos) + ";" + String.valueOf(ground) + ";" + String.valueOf(pp1) + ";" + String.valueOf(pp2) + ";" + String.valueOf(pat) + ";" + String.valueOf(speed));
+        saveEnginePrefs();
     }
+    
+    // save the scene (enemies, player, and background atm)
+    public void saveScene() {
+        int i = 1;
+        for (Enemy e : enemies) {
+            prefs.putString("Enemy" + String.valueOf(i), String.valueOf(e.eType) + ";" + String.valueOf((int)e.x) + ";" + String.valueOf((int)e.y) + ";" + String.valueOf(e.leftPatPoint) + ";" + String.valueOf(e.rightPatPoint) + ";" + String.valueOf(e.patrolling) + ";" + String.valueOf(e.hSpeed));
+            i++;
+        }
+        prefs.putString("player", String.valueOf(playerInstance.playerSpriteIndex) + ";" + String.valueOf((int)playerInstance.x) + ";" + String.valueOf((int)playerInstance.y) + ";" + String.valueOf((int)playerInstance.hSpeed) + ";" + String.valueOf((int)playerInstance.vSpeed) + ";" + String.valueOf((int)playerInstance.jumpHeight));
+        prefs.putInteger("bg", bgIndex);
+        prefs.flush();
+        }
 
-    // Get/initialize game preferences/state. Details documented at:
-    // https://github.com/libgdx/libgdx/wiki/Preferences
+    
+    // Loads the scene information for the opened project using its preferences file
     public void loadEnginePrefs() {
+        // load project's prefs
         prefs = Gdx.app.getPreferences(name);
+        
+        // load saved enemies into the scene
         String enemyBuffer;
-        int [] enemyArr= new int[3];
+        int[] enemyArr = new int[7];
         for (int i = 1; !(prefs.getString("Enemy" + i, "").equals("")); i++) {
             int j = 0;
             enemyBuffer = prefs.getString("Enemy" + i);
-            for (String retval: enemyBuffer.split(";")) {
-                enemyArr[j] = Integer.parseInt(retval);
+            for (String retval : enemyBuffer.split(";")) {
+                if (retval.equals("false"))
+                    enemyArr[j] = 0;
+                else if (retval.equals("true"))
+                    enemyArr[j] = 1;
+                else
+                    enemyArr[j] = Integer.parseInt(retval);
                 j++;
             }
-            addEnemy(enemyArr[0], enemyArr[1], enemyArr[2]);
+            addEnemy(enemyArr[0], enemyArr[1], enemyArr[2], enemyArr[3], enemyArr[4], enemyArr[5], enemyArr[6]);
         }
+        
+        // load the player in the scene
+        if (prefs.getString("player", "").equals("")) {
+            playerInstance = new Player(0);
+        } else {
+            int j = 0;
+            String playerBuffer = prefs.getString("player");
+            int[] playerArr = new int[6];
+            for (String retval : playerBuffer.split(";")) {
+                if (retval.equals("false"))
+                    playerArr[j] = 0;
+                else if (retval.equals("true"))
+                    playerArr[j] = 1;
+                else
+                    playerArr[j] = Integer.parseInt(retval);
+                j++;
+            }
+            playerInstance = new Player(playerArr[0], playerArr[1], playerArr[2], playerArr[3], playerArr[4], playerArr[5]);
+        }
+        rightBound -= playerInstance.width;
+        
+        // load the background
+        if (prefs.getInteger("bg", -1) != -1)
+            bgIndex = prefs.getInteger("bg");
     }
 
     public void setName(String newName) {
@@ -438,5 +500,9 @@ public class VProgEngine extends ApplicationAdapter {
         // This just starts the queuing - the bulk of the work is done by the
         // QueuedAssetChaperone and the callback assigned it it.
         manager.load(filepath, Texture.class);
+    }
+    
+    public void closeGame() {
+        Gdx.app.exit();
     }
 }

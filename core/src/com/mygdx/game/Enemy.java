@@ -16,14 +16,18 @@ public class Enemy extends Rectangle {
     public int hSpeed = 150;
     public boolean left = true;
     public boolean patrolling = false;
-    public float leftPatPoint, rightPatPoint;
+    public int leftPatPoint, rightPatPoint;
     
-    public Enemy(int type, int xPos, int yPos) {
+    // add enemy with specific attributes
+    public Enemy(int type, int xPos, int yPos, int pp1, int pp2, int patrolling, int speed) {
         x = xPos;
         y = yPos;
         width = 56;
         height = 80;
         eType = type;
+        if (patrolling == 1)
+            SetPatrolPoints(pp1, pp2);
+        hSpeed = speed;
     }
     
     // swaps between the pre-set enemy sprites
@@ -31,12 +35,14 @@ public class Enemy extends Rectangle {
         eType = type;
     }
     
-    public void SetPatrolPoints(float pp1, float pp2) {
+    // set patrol behavior for enemy
+    public void SetPatrolPoints(int pp1, int pp2) {
         patrolling = true;
         leftPatPoint = pp1;
         rightPatPoint = pp2;
     }
     
+    // stop patrolling
     public void stopPatrol() {
         patrolling = false;
     }
@@ -45,6 +51,7 @@ public class Enemy extends Rectangle {
         return patrolling;
     }
     
+    // update patrol information
     public void update(float deltaTime) {
         if (x <= leftPatPoint)
             left = false;
