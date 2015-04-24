@@ -10,9 +10,9 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Component;
 
-import com.mygdx.game.Callback;
+import com.mygdx.game.Callable;
 
-public class TextureAssetPanel extends JPanel implements Callback
+public class TextureAssetPanel extends JPanel implements Callable
 {
     private JLabel metadataLabel;
     private String metadataString;

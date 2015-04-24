@@ -24,22 +24,22 @@ public class QueuedAssetChaperone
 {
     private AssetManager manager;
     private Array<String> assets;
-    private Array<Callback> callbacks;
+    private Array<Callable> callable;
     
     public QueuedAssetChaperone(AssetManager _manager)
     {
         manager = _manager;
         assets = new Array<String>();
-        callbacks = new Array<Callback>();
+        callables = new Array<Callable>();
     }
     
     // Add asset to list of assets to monitor. Assets are keyed by name in this,
-    // just as they are in AssetManager itself. Callback is a functor which is
+    // just as they are in AssetManager itself. Callable is a functor which is
     // to simply be invoked when the asset is finally loaded.
-    public void add(String asset, Callback callback)
+    public void add(String asset, Callable callable)
     {
         assets.add(asset);
-        callbacks.add(callback);
+        callables.add(callable);
     }
     
     // This is the actual 'check' - it's intended to be ran regularly when you
@@ -48,16 +48,16 @@ public class QueuedAssetChaperone
     public void check()
     {
         java.util.Iterator<String> assetsItr = assets.iterator();
-        java.util.Iterator<Callback> callbacksItr = callbacks.iterator();
+        java.util.Iterator<Callable> callableItr = callable.iterator();
         while(assetsItr.hasNext())
         {
             String asset = assetsItr.next();
-            Callback callback = callbacksItr.next();
+            Callable callable = callablesItr.next();
             if(manager.isLoaded(asset))
             {
                 assetsItr.remove();
-                callbacksItr.remove();
-                callback.call();
+                callablesItr.remove();
+                callable.call();
             }
         }
     }
