@@ -53,9 +53,10 @@ public class TextureAssetPanel extends JPanel implements Callable
     }
     
     @Override
-    public void call()
+    public Object call(final Object... argv)
     {
         metadataLabel.setText(metadataString);
         parentPanel.updateUI();
+        return null;
     }
 }
