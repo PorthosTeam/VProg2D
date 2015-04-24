@@ -191,6 +191,7 @@ public class MainUI {
     };
 
     private JPanel texturesUploadedPanel;
+    private JPanel objectsUploadedPanel2;
     public MainUI()
     {
         screenBounds = WindowBoundsChecker.getWindowBounds();
@@ -269,6 +270,39 @@ public class MainUI {
         imageUploadPanel.add(imagesScrollPane);
         
         frameContainer.add(imageUploadPanel, BorderLayout.WEST);
+        
+               
+        
+        JPanel objectsUploadPanel = new JPanel();
+        objectsUploadPanel.setLayout(
+            new BoxLayout(objectsUploadPanel, BoxLayout.PAGE_AXIS)
+        );
+        objectsUploadPanel.setPreferredSize(new Dimension(230, 0));
+        
+        JButton objectsUploadButton
+            = new JButton("Add New Object", new ImageIcon("uploadAsset.png"));
+        objectsUploadButton.addActionListener(uploadTexture);
+        objectsUploadButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        
+        objectsUploadedPanel2 = new JPanel();
+        objectsUploadedPanel2.setLayout(
+            new BoxLayout(objectsUploadedPanel2, BoxLayout.PAGE_AXIS)
+        );
+        objectsUploadedPanel2.setMaximumSize(new Dimension(220, 0));
+        objectsUploadedPanel2.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        
+        JScrollPane objectsScrollPane = new JScrollPane(objectsUploadedPanel2);
+        objectsScrollPane.setPreferredSize(new Dimension(220, 0));
+        objectsScrollPane.setHorizontalScrollBarPolicy(
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        objectsScrollPane.setVerticalScrollBarPolicy(
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        objectsScrollPane.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        
+        objectsUploadPanel.add(objectsUploadButton);
+        objectsUploadPanel.add(objectsScrollPane);
+        
+        frameContainer.add(objectsUploadPanel, BorderLayout.EAST);
         
         wrapperFrame.setVisible(true);
     }
