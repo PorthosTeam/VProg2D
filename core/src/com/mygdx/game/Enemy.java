@@ -26,13 +26,14 @@ public class Enemy extends Rectangle {
     }
 
     // add enemy with specific attributes
-    public Enemy(int type, int xPos, int yPos, int pp1, int pp2, int patrolling, int speed) {
+    public Enemy(int type, int xPos, int yPos, int pp1, int pp2, int pat, int speed) {
         x = xPos;
         y = yPos;
         width = 56;
         height = 80;
         eType = type;
-        if (patrolling == 1) {
+        if (pat == 1) {
+            patrolling = true;
             leftPatPoint = pp1;
             rightPatPoint = pp2;
         }

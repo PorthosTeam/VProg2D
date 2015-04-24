@@ -479,11 +479,13 @@ public class VProgEngine extends ApplicationAdapter {
             }
             playerInstance = new Player(playerArr[0], playerArr[1], playerArr[2], playerArr[3], playerArr[4], playerArr[5]);
         }
-        rightBound -= playerInstance.width;
         
         // load the background
         if (prefs.getInteger("bg", -1) != -1)
             bgIndex = prefs.getInteger("bg");
+        
+        // send loading finished signal
+        callback.call("load");
     }
 
     // save editor state
