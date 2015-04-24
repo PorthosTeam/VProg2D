@@ -6,8 +6,10 @@ import com.mygdx.game.WindowBoundsChecker;
 import java.awt.Rectangle;
 
 // This is for the editable-game engine.
+import com.badlogic.gdx.backends.lwjgl.LwjglAWTCanvas;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.Gdx;
 import com.mygdx.game.VProgEngine;
 import com.mygdx.game.Callback;
 
@@ -45,6 +47,7 @@ public class MainUI {
     public ArrayList<String> projectNames;
     String selectedProject;
     JFrame frame;
+    LwjglAWTCanvas gameCanvas;
 
     // existing projects list
     // Actions for each of the menu buttons.
@@ -89,7 +92,7 @@ public class MainUI {
                     projectNames.add(line);
                 }
             } catch (IOException ioe) {
-                ErrorFrame errorFrame = new ErrorFrame(ex);
+                ErrorFrame errorFrame = new ErrorFrame(ioe);
                 return;
             }
             // populate selection list
@@ -129,14 +132,25 @@ public class MainUI {
 
                         LwjglApplicationConfiguration config
                                 = new LwjglApplicationConfiguration();
-                        config.title = selectedProject;
-                        config.x = -1;
-                        config.y = -1;
-                        config.width = Math.min(MainUI.screenBounds.width, 800);
-                        config.height = Math.min(MainUI.screenBounds.height, 600);
+                        //config.title = selectedProject;
+                        //config.x = -1;
+                        //config.y = -1;
+                        //config.width = Math.min(MainUI.screenBounds.width, 800);
+                        //config.height = Math.min(MainUI.screenBounds.height, 600);
                         config.resizable = true;
                         config.allowSoftwareMode = true;
-                        new LwjglApplication(MainUI.vprog, config);
+                        
+                        gameCanvas = new LwjglAWTCanvas(MainUI.vprog);
+                        JFrame gameFrame = new JFrame(selectedProject);
+                        Rectangle centeredBounds =
+                            WindowBoundsChecker.getCenteredBounds(800, 600);
+                        gameFrame.setBounds(centeredBounds);
+                        gameFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        gameFrame.setVisible(true);
+                        final Container gameContainer = gameFrame.getContentPane();
+                        gameContainer.setLayout(new BorderLayout());
+                        gameContainer.add(gameCanvas.getCanvas(),
+                            BorderLayout.CENTER);
                         frame.dispose();
                     }
                 }
