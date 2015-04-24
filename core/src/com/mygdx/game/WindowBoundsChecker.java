@@ -47,4 +47,17 @@ public final class WindowBoundsChecker {
         insetBounds.height = bounds.height - margin.top - margin.bottom;
         return insetBounds;
     }
+    
+    public static Rectangle getCenteredBounds(int xMax, int yMax)
+    {
+        Rectangle screenBounds = WindowBoundsChecker.getWindowBounds();
+        Rectangle centeredBounds = new Rectangle();
+        centeredBounds.width = Math.min(xMax, screenBounds.width);
+        centeredBounds.height = Math.min(yMax, screenBounds.height);
+        centeredBounds.x = (screenBounds.width - screenBounds.x) / 2
+            + screenBounds.x - (centeredBounds.width / 2);
+        centeredBounds.y = (screenBounds.height - screenBounds.y) / 2
+            + screenBounds.y - (centeredBounds.height / 2);
+        return centeredBounds;
+    }
 }

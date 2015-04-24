@@ -15,14 +15,7 @@ public class AboutFrame extends JFrame
     {
         super("About VProg2D");
         
-        Rectangle screenBounds = WindowBoundsChecker.getWindowBounds();
-        Rectangle bounds = new Rectangle();
-        bounds.width = Math.min(220, screenBounds.width);
-        bounds.height = Math.min(300, screenBounds.height);
-        bounds.x = (screenBounds.width - screenBounds.x) / 2
-            + screenBounds.x - (bounds.width / 2);
-        bounds.y = (screenBounds.height - screenBounds.y) / 2
-            + screenBounds.y - (bounds.height / 2);
+        Rectangle bounds = WindowBoundsChecker.getCenteredBounds(220, 300);
         setBounds(bounds);
         
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
