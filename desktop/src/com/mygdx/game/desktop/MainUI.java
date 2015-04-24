@@ -89,6 +89,8 @@ public class MainUI {
                     projectNames.add(line);
                 }
             } catch (IOException ioe) {
+                ErrorFrame errorFrame = new ErrorFrame(ex);
+                return;
             }
             // populate selection list
             String[] projNamesArr = new String[projectNames.size()];
