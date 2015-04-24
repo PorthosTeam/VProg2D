@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.BorderLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -26,6 +27,7 @@ import java.io.FileReader;
 import javax.swing.*;
 import java.io.IOException;
 import javax.swing.JList;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.Dimension;
@@ -182,6 +184,7 @@ public class MainUI {
         }
     };
 
+    private JPanel texturesUploadedPanel;
     public MainUI()
     {
         screenBounds = WindowBoundsChecker.getWindowBounds();
@@ -212,7 +215,7 @@ public class MainUI {
 
         return menuBar;
     }
-
+    
     private void launchMainWindow(Rectangle bounds) {
         JMenuBar menuBar = buildMenuBar();
 
@@ -230,11 +233,37 @@ public class MainUI {
         // "NORTH" constant forces the menu bar into the top-left, as typical.
         frameContainer.add(menuBar, BorderLayout.NORTH);
 
-        JButton buttonUploadTexture
-                = new JButton("Upload Texture", new ImageIcon("uploadAsset.png"));
-        buttonUploadTexture.addActionListener(uploadTexture);
-        frameContainer.add(buttonUploadTexture, BorderLayout.WEST);
-
+        JPanel imageUploadPanel = new JPanel();
+        imageUploadPanel.setLayout(
+            new BoxLayout(imageUploadPanel, BoxLayout.PAGE_AXIS)
+        );
+        imageUploadPanel.setPreferredSize(new Dimension(230, 0));
+        
+        JButton imageUploadButton
+            = new JButton("Upload Texture", new ImageIcon("uploadAsset.png"));
+        imageUploadButton.addActionListener(uploadTexture);
+        imageUploadButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        texturesUploadedPanel = new JPanel();
+        texturesUploadedPanel.setLayout(
+            new BoxLayout(texturesUploadedPanel, BoxLayout.PAGE_AXIS)
+        );
+        texturesUploadedPanel.setMaximumSize(new Dimension(220, 0));
+        texturesUploadedPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        JScrollPane imagesScrollPane = new JScrollPane(texturesUploadedPanel);
+        imagesScrollPane.setPreferredSize(new Dimension(220, 0));
+        imagesScrollPane.setHorizontalScrollBarPolicy(
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        imagesScrollPane.setVerticalScrollBarPolicy(
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        imagesScrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        imageUploadPanel.add(imageUploadButton);
+        imageUploadPanel.add(imagesScrollPane);
+        
+        frameContainer.add(imageUploadPanel, BorderLayout.WEST);
+        
         wrapperFrame.setVisible(true);
     }
 
@@ -256,12 +285,9 @@ public class MainUI {
                 ErrorFrame errorFrame = new ErrorFrame(ex);
                 return;
             }
-            vprog.queuedAssetChaperone.add(filepath, new Callback() {
-                @Override
-                public void call() {
-                    System.out.println("LOADED OMFG!");
-                }
-            });
+            TextureAssetPanel t = new TextureAssetPanel(filepath);
+            texturesUploadedPanel.add(t);
+            vprog.queuedAssetChaperone.add(filepath, t);
             vprog.loadTexture(filepath);
         }
     };
