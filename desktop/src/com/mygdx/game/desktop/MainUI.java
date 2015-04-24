@@ -89,7 +89,7 @@ public class MainUI {
                     projectNames.add(line);
                 }
             } catch (IOException ioe) {
-                ErrorFrame errorFrame = new ErrorFrame(ex);
+                ErrorFrame errorFrame = new ErrorFrame(ioe);
                 return;
             }
             // populate selection list
