@@ -48,7 +48,7 @@ public class QueuedAssetChaperone
     public void check()
     {
         java.util.Iterator<String> assetsItr = assets.iterator();
-        java.util.Iterator<Callable> callableItr = callable.iterator();
+        java.util.Iterator<Callable> callablesItr = callables.iterator();
         while(assetsItr.hasNext())
         {
             String asset = assetsItr.next();
