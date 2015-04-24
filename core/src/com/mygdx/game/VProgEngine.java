@@ -43,6 +43,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.Color;
 
+import com.mygdx.game.Callable;
+
 
 public class VProgEngine extends ApplicationAdapter {
 
@@ -103,15 +105,16 @@ public class VProgEngine extends ApplicationAdapter {
     Doodad doodad;
     
     // hook Main UI frame to engine
-    // MainUI uiHook;
+    Callable callback;
 
     // This top constructor is valid, because you can then setName to pick your
     // instance name, but presently I can't think of a good reason to use it.
     public VProgEngine() {
     }
 
-    public VProgEngine(String instanceName) {
+    public VProgEngine(String instanceName, Callable caller) {
         this.setName(instanceName);
+        callback = caller;
     }
 
     @Override
@@ -557,6 +560,8 @@ public class VProgEngine extends ApplicationAdapter {
         // load the background
         if (prefs.getInteger("bg", -1) != -1)
             bgIndex = prefs.getInteger("bg");
+        
+        callback.call("load");
     }
 
     public void setName(String newName) {

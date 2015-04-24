@@ -44,12 +44,15 @@ public class Project extends JPanel implements ActionListener {
     JFileChooser file;
     URL dir;
     String dirString;
+    MainUI mainUI;
 
     // Create a new project
-    public Project() {
+    public Project(MainUI uiRef) {
 
         // Init layout and construct dialog window
         super(new FlowLayout());
+        
+        mainUI = uiRef;
 
         // Project name input
         add(new JLabel("Project name: ", JLabel.CENTER));
@@ -169,7 +172,7 @@ public class Project extends JPanel implements ActionListener {
                     JFrame projectFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
                     projectFrame.dispose();
                 } else {
-                    MainUI.vprog = new VProgEngine(title);
+                    MainUI.vprog = new VProgEngine(title, mainUI);
 
                     LwjglApplicationConfiguration config
                             = new LwjglApplicationConfiguration();

@@ -32,7 +32,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.Dimension;
 
-public class MainUI {
+import com.mygdx.game.Callable;
+
+public class MainUI implements Callable {
 
     // This will hold the screen area available to us for our windows (we don't
     // want to open windows bigger than these bounds if we can avoid it).
@@ -63,7 +65,7 @@ public class MainUI {
             JFrame frame = new JFrame("Create Project");
             frame.setLocationRelativeTo(null);
             User testUser = new User("TestUser");
-            Project project = new Project();
+            Project project = new Project(MainUI.this);
             // erases objects on window load - fix later
             objectsAddPanel2.removeAll();
             redrawMainUI();
@@ -138,7 +140,7 @@ public class MainUI {
                         if (MainUI.vprog != null) {
                             MainUI.vprog.reloadApp(selectedProject);
                         } else {
-                            MainUI.vprog = new VProgEngine(selectedProject);
+                            MainUI.vprog = new VProgEngine(selectedProject, MainUI.this);
 
                             LwjglApplicationConfiguration config
                                     = new LwjglApplicationConfiguration();
@@ -306,26 +308,8 @@ public class MainUI {
 
         frameContainer.add(objectsAddPanel, BorderLayout.EAST);
 
-        JButton updateButton
-                = new JButton("Update", new ImageIcon("uploadAsset.png"));
-        updateButton.addActionListener(updateObjects);
-        updateButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        frameContainer.add(updateButton, BorderLayout.CENTER);
-
         wrapperFrame.setVisible(true);
     }
-
-    private ActionListener updateObjects = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            for (enemyCount = 1; enemyCount < vprog.enemies.size; enemyCount++) {
-                ObjectAssetPanel o = new ObjectAssetPanel("Enemy" + String.valueOf(enemyCount));
-                objectsAddPanel2.add(o);
-            }
-            redrawMainUI();
-        }
-    };
 
     private ActionListener uploadTexture = new ActionListener() {
         @Override
@@ -415,4 +399,20 @@ public class MainUI {
             }
         }
     };
+
+    @Override
+    public Object call(final Object... argv) {
+
+        // loading finished signal
+        if (((String) argv[0]).equals("load")) {
+            System.out.println("called");
+            for (enemyCount = 1; enemyCount < vprog.enemies.size; enemyCount++) {
+                ObjectAssetPanel o = new ObjectAssetPanel("Enemy" + String.valueOf(enemyCount));
+                objectsAddPanel2.add(o);
+            }
+        }
+        redrawMainUI();
+        return null;
+    }
+
 }
