@@ -4,5 +4,5 @@ package com.mygdx.game;
 
 public interface Callable
 {
- void call();
+ Object call(final Object... argv);
 }
