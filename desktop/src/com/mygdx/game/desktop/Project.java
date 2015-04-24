@@ -153,30 +153,37 @@ public class Project extends JPanel implements ActionListener {
             // append if it doesn't exist
             if (!exists) {
                 if (!fileCreated) {
-                try {
-                    PrintWriter writer = new PrintWriter(new FileOutputStream(new File(dirString + "Projects.txt"), true));
-                    writer.println(title);
-                    writer.close();
-                } catch (IOException ioe) {
-                    //
-                }
+                    try {
+                        PrintWriter writer = new PrintWriter(new FileOutputStream(new File(dirString + "Projects.txt"), true));
+                        writer.println(title);
+                        writer.close();
+                    } catch (IOException ioe) {
+                        //
+                    }
                 }
 
                 // Open game frame
-                MainUI.vprog = new VProgEngine(title);
+                // reload if application window already open
+                if (MainUI.vprog != null) {
+                    MainUI.vprog.reloadApp(title);
+                    JFrame projectFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                    projectFrame.dispose();
+                } else {
+                    MainUI.vprog = new VProgEngine(title);
 
-                LwjglApplicationConfiguration config
-                        = new LwjglApplicationConfiguration();
-                config.title = title;
-                config.x = -1;
-                config.y = -1;
-                config.width = Math.min(MainUI.screenBounds.width, 800);
-                config.height = Math.min(MainUI.screenBounds.height, 600);
-                config.resizable = true;
-                config.allowSoftwareMode = true;
-                new LwjglApplication(MainUI.vprog, config);
-                JFrame projectFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-                projectFrame.dispose();
+                    LwjglApplicationConfiguration config
+                            = new LwjglApplicationConfiguration();
+                    config.title = title;
+                    config.x = -1;
+                    config.y = -1;
+                    config.width = Math.min(MainUI.screenBounds.width, 800);
+                    config.height = Math.min(MainUI.screenBounds.height, 600);
+                    config.resizable = true;
+                    config.allowSoftwareMode = true;
+                    new LwjglApplication(MainUI.vprog, config);
+                    JFrame projectFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+                    projectFrame.dispose();
+                }
             } else {
                 JOptionPane.showMessageDialog(null,
                         "Project already exists!", "Error", 0);

@@ -49,6 +49,8 @@ public class VProgEngine extends ApplicationAdapter {
 
     // global vars
     private String name;
+    private String reloadName;
+    private boolean reloading = false;
     private boolean frozen = true;
 
     // TODO 2015-04-22: This should NOT be static. But external classes link to
@@ -190,6 +192,11 @@ public class VProgEngine extends ApplicationAdapter {
         if (frozen) {
             return;
         }
+        
+        if (reloading) {
+            reloading = false;
+            Gdx.graphics.setTitle(reloadName);
+        }
 
         Gdx.gl.glClearColor(.25f, .25f, .25f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -286,6 +293,11 @@ public class VProgEngine extends ApplicationAdapter {
         // save scene
         if (Gdx.input.isKeyJustPressed(Keys.P)) {
             this.saveEnginePrefs();
+        }
+        
+        // debug key
+        if (Gdx.input.isKeyJustPressed(Keys.CONTROL_RIGHT)) {
+            Gdx.graphics.setTitle(reloadName);
         }
 
         /* Add a circle to the circles array at the mouse pos on left-click 
@@ -417,6 +429,54 @@ public class VProgEngine extends ApplicationAdapter {
 
     public void freeze() {
         this.frozen = true;
+    }
+    
+    public void reloadApp(String newName) {
+        reloading = true;
+        reloadName = newName;
+        circles.clear();
+        enemies.clear();
+        prefs = Gdx.app.getPreferences(newName);
+        // load saved enemies into the scene
+        String enemyBuffer;
+        int[] enemyArr = new int[7];
+        for (int i = 1; !(prefs.getString("Enemy" + i, "").equals("")); i++) {
+            int j = 0;
+            enemyBuffer = prefs.getString("Enemy" + i);
+            for (String retval : enemyBuffer.split(";")) {
+                if (retval.equals("false"))
+                    enemyArr[j] = 0;
+                else if (retval.equals("true"))
+                    enemyArr[j] = 1;
+                else
+                    enemyArr[j] = Integer.parseInt(retval);
+                j++;
+            }
+            addEnemy(enemyArr[0], enemyArr[1], enemyArr[2], enemyArr[3], enemyArr[4], enemyArr[5], enemyArr[6]);
+        }
+        // load the player in the scene
+        if (prefs.getString("player", "").equals("")) {
+            playerInstance = new Player(0);
+        } else {
+            int j = 0;
+            String playerBuffer = prefs.getString("player");
+            int[] playerArr = new int[6];
+            for (String retval : playerBuffer.split(";")) {
+                if (retval.equals("false"))
+                    playerArr[j] = 0;
+                else if (retval.equals("true"))
+                    playerArr[j] = 1;
+                else
+                    playerArr[j] = Integer.parseInt(retval);
+                j++;
+            }
+            playerInstance = new Player(playerArr[0], playerArr[1], playerArr[2], playerArr[3], playerArr[4], playerArr[5]);
+        }
+        rightBound -= playerInstance.width;
+        
+        // load the background
+        if (prefs.getInteger("bg", -1) != -1)
+            bgIndex = prefs.getInteger("bg");
     }
 
     // save editor state

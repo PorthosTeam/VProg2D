@@ -122,9 +122,12 @@ public class MainUI {
                         System.out.println("No project selected.");
                     } else {
                         // load selected project
-                        if (MainUI.vprog != null)
-                            MainUI.vprog.closeGame();
-                        
+                        // reload if application window already open
+                        if (MainUI.vprog != null) {
+                            MainUI.vprog.reloadApp(selectedProject);
+                            frame.dispose();
+                        }
+                        else {
                         MainUI.vprog = new VProgEngine(selectedProject);
 
                         LwjglApplicationConfiguration config
@@ -138,6 +141,7 @@ public class MainUI {
                         config.allowSoftwareMode = true;
                         new LwjglApplication(MainUI.vprog, config);
                         frame.dispose();
+                        }
                     }
                 }
             });
