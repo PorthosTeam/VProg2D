@@ -161,13 +161,6 @@ public class MainUI {
         }
     };
 
-    private ActionListener testAction = new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            System.out.print("Test Action\n");
-        }
-    };
-
     private ActionListener runProgramAction = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -189,17 +182,15 @@ public class MainUI {
         }
     };
 
-    // This class pretty much just launches the UI from the constructor.
-    // Prob'ly not the "right"/"proper" way to do it, but it works fine: If we
-    // ever need to do a lot of custom initialization before launching it,
-    // refactoring it will make sense, but for now this works fine.
-    public MainUI() {
+    public MainUI()
+    {
         screenBounds = WindowBoundsChecker.getWindowBounds();
 
         launchMainWindow(screenBounds);
     }
 
-    private JMenuBar buildMenuBar() {
+    private JMenuBar buildMenuBar()
+    {
         JMenuBar menuBar = new JMenuBar();
 
         JMenuHelper fileMenu = new JMenuHelper("File");
@@ -210,9 +201,9 @@ public class MainUI {
 
         JMenuHelper projectMenu = new JMenuHelper("Project");
         projectMenu.add("Construct", "construct_small.png", constructAction);
-        projectMenu.add("Test", "test_small.png", testAction);
         projectMenu.add("Run", "runProgram_small.png", runProgramAction);
-        projectMenu.add("Freeze", "pauseProgram_small.png", freezeProgramAction);
+        projectMenu.add("Freeze", "pauseProgram_small.png",
+            freezeProgramAction);
         menuBar.add(projectMenu.jMenu());
 
         JMenuHelper helpMenu = new JMenuHelper("Help");
