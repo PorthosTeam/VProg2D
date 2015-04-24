@@ -64,6 +64,9 @@ public class MainUI {
             frame.setLocationRelativeTo(null);
             User testUser = new User("TestUser");
             Project project = new Project();
+            // erases objects on window load - fix later
+            objectsAddPanel2.removeAll();
+            redrawMainUI();
             // testUser.addProject(project);
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.getContentPane().add(project);
@@ -129,7 +132,6 @@ public class MainUI {
                         // load selected project
 
                         // clear objects panel
-                        System.out.println("remove");
                         objectsAddPanel2.removeAll();
                         redrawMainUI();
                         // reload if application window already open
@@ -304,8 +306,26 @@ public class MainUI {
 
         frameContainer.add(objectsAddPanel, BorderLayout.EAST);
 
+        JButton updateButton
+                = new JButton("Update", new ImageIcon("uploadAsset.png"));
+        updateButton.addActionListener(updateObjects);
+        updateButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        frameContainer.add(updateButton, BorderLayout.CENTER);
+
         wrapperFrame.setVisible(true);
     }
+
+    private ActionListener updateObjects = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            for (enemyCount = 1; enemyCount < vprog.enemies.size; enemyCount++) {
+                ObjectAssetPanel o = new ObjectAssetPanel("Enemy" + String.valueOf(enemyCount));
+                objectsAddPanel2.add(o);
+            }
+            redrawMainUI();
+        }
+    };
 
     private ActionListener uploadTexture = new ActionListener() {
         @Override
