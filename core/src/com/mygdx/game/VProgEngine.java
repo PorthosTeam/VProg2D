@@ -156,7 +156,7 @@ public class VProgEngine extends ApplicationAdapter {
         // Store drawn circles
         circles = new Array<Circle>();
         
-        // load up data structures after initializing all fo them
+        // load up data structures after initializing all of them
         this.loadEnginePrefs();
 
         Doodad.setBatch(batch);
