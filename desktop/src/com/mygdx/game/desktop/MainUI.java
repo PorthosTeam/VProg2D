@@ -406,7 +406,7 @@ public class MainUI implements Callable {
         // loading finished signal
         if (((String) argv[0]).equals("load")) {
             System.out.println("called");
-            for (enemyCount = 1; enemyCount < vprog.enemies.size; enemyCount++) {
+            for (enemyCount = 1; enemyCount <= vprog.enemies.size; enemyCount++) {
                 ObjectAssetPanel o = new ObjectAssetPanel("Enemy" + String.valueOf(enemyCount));
                 objectsAddPanel2.add(o);
             }
