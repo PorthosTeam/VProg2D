@@ -14,10 +14,10 @@ Load Project **
  */
 package com.mygdx.game;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+//import java.awt.event.WindowAdapter;
+//import java.awt.event.WindowEvent;
 
-import javax.swing.JFrame;
+//import javax.swing.JFrame;
 
 import java.util.Random;
 
@@ -42,6 +42,7 @@ import com.badlogic.gdx.assets.AssetManager;
 //import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.Color;
+
 
 public class VProgEngine extends ApplicationAdapter {
 
@@ -75,7 +76,7 @@ public class VProgEngine extends ApplicationAdapter {
     public Array<Enemy> enemies;
 
     // Environment
-    public static float ground = 36;
+    public int ground = 36;
     public int bgIndex = 0;
 
     // Text
@@ -100,6 +101,9 @@ public class VProgEngine extends ApplicationAdapter {
     Texture img;
 
     Doodad doodad;
+    
+    // hook Main UI frame to engine
+    // MainUI uiHook;
 
     // This top constructor is valid, because you can then setName to pick your
     // instance name, but presently I can't think of a good reason to use it.
@@ -485,10 +489,12 @@ public class VProgEngine extends ApplicationAdapter {
     }
 
     // add an enemy from the preferences
-    public void addEnemy(int etype, int pos, int ground, int pp1, int pp2, int pat, int speed) {
+    public int addEnemy(int etype, int pos, int ground, int pp1, int pp2, int pat, int speed) {
         enemies.add(new Enemy(etype, pos, ground, pp1, pp2, pat, speed));
         prefs.putString("Enemy" + String.valueOf(enemies.size), String.valueOf(etype) + ";" + String.valueOf(pos) + ";" + String.valueOf(ground) + ";" + String.valueOf(pp1) + ";" + String.valueOf(pp2) + ";" + String.valueOf(pat) + ";" + String.valueOf(speed));
         saveEnginePrefs();
+        // return index of added enemy
+        return enemies.size;
     }
     
     // save the scene (enemies, player, and background atm)
@@ -525,6 +531,7 @@ public class VProgEngine extends ApplicationAdapter {
                 j++;
             }
             addEnemy(enemyArr[0], enemyArr[1], enemyArr[2], enemyArr[3], enemyArr[4], enemyArr[5], enemyArr[6]);
+            
         }
         
         // load the player in the scene

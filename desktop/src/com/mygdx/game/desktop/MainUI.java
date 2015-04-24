@@ -9,7 +9,7 @@ import java.awt.Rectangle;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mygdx.game.VProgEngine;
-import com.mygdx.game.Callback;
+import com.mygdx.game.Enemy;
 
 // This is for the graphical user interface.
 import java.util.ArrayList;
@@ -45,6 +45,13 @@ public class MainUI {
     public ArrayList<String> projectNames;
     String selectedProject;
     JFrame frame;
+
+    private JPanel texturesUploadedPanel;
+    private JPanel objectsAddPanel2;
+
+    private String selectedObjectType;
+    public int enemyCount;
+    public int bgCount = 0;
 
     // existing projects list
     // Actions for each of the menu buttons.
@@ -86,10 +93,9 @@ public class MainUI {
                 String line;
                 while ((line = br.readLine()) != null) {
                     projectNames.add(line);
+
                 }
             } catch (IOException ioe) {
-                ErrorFrame errorFrame = new ErrorFrame(ioe);
-                return;
             }
             // populate selection list
             String[] projNamesArr = new String[projectNames.size()];
@@ -121,10 +127,14 @@ public class MainUI {
                         System.out.println("No project selected.");
                     } else {
                         // load selected project
+
+                        // clear objects panel
+                        System.out.println("remove");
+                        objectsAddPanel2.removeAll();
+                        redrawMainUI();
                         // reload if application window already open
                         if (MainUI.vprog != null) {
                             MainUI.vprog.reloadApp(selectedProject);
-                            frame.dispose();
                         } else {
                             MainUI.vprog = new VProgEngine(selectedProject);
 
@@ -138,8 +148,8 @@ public class MainUI {
                             config.resizable = true;
                             config.allowSoftwareMode = true;
                             new LwjglApplication(MainUI.vprog, config);
-                            frame.dispose();
                         }
+                        frame.dispose();
                     }
                 }
             });
@@ -187,9 +197,6 @@ public class MainUI {
             AboutFrame aboutFrame = new AboutFrame();
         }
     };
-
-    private JPanel texturesUploadedPanel;
-    private JPanel objectsUploadedPanel2;
 
     public MainUI() {
         screenBounds = WindowBoundsChecker.getWindowBounds();
@@ -268,25 +275,23 @@ public class MainUI {
 
         frameContainer.add(imageUploadPanel, BorderLayout.WEST);
 
-        JPanel objectsUploadPanel = new JPanel();
-        objectsUploadPanel.setLayout(
-                new BoxLayout(objectsUploadPanel, BoxLayout.PAGE_AXIS)
+        JPanel objectsAddPanel = new JPanel();
+        objectsAddPanel.setLayout(new BoxLayout(objectsAddPanel, BoxLayout.PAGE_AXIS)
         );
-        objectsUploadPanel.setPreferredSize(new Dimension(230, 0));
+        objectsAddPanel.setPreferredSize(new Dimension(230, 0));
 
-        JButton objectsUploadButton
+        JButton objectsAddButton
                 = new JButton("Add New Object", new ImageIcon("uploadAsset.png"));
-        objectsUploadButton.addActionListener(addObject);
-        objectsUploadButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        objectsAddButton.addActionListener(addObject);
+        objectsAddButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
-        objectsUploadedPanel2 = new JPanel();
-        objectsUploadedPanel2.setLayout(
-                new BoxLayout(objectsUploadedPanel2, BoxLayout.PAGE_AXIS)
+        objectsAddPanel2 = new JPanel();
+        objectsAddPanel2.setLayout(new BoxLayout(objectsAddPanel2, BoxLayout.PAGE_AXIS)
         );
-        objectsUploadedPanel2.setMaximumSize(new Dimension(220, 0));
-        objectsUploadedPanel2.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        objectsAddPanel2.setMaximumSize(new Dimension(220, 0));
+        objectsAddPanel2.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
-        JScrollPane objectsScrollPane = new JScrollPane(objectsUploadedPanel2);
+        JScrollPane objectsScrollPane = new JScrollPane(objectsAddPanel2);
         objectsScrollPane.setPreferredSize(new Dimension(220, 0));
         objectsScrollPane.setHorizontalScrollBarPolicy(
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -294,10 +299,10 @@ public class MainUI {
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         objectsScrollPane.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
-        objectsUploadPanel.add(objectsUploadButton);
-        objectsUploadPanel.add(objectsScrollPane);
+        objectsAddPanel.add(objectsAddButton);
+        objectsAddPanel.add(objectsScrollPane);
 
-        frameContainer.add(objectsUploadPanel, BorderLayout.EAST);
+        frameContainer.add(objectsAddPanel, BorderLayout.EAST);
 
         wrapperFrame.setVisible(true);
     }
@@ -331,7 +336,7 @@ public class MainUI {
 
     public void redrawMainUI() {
         texturesUploadedPanel.updateUI();
-        objectsUploadedPanel2.updateUI();
+        objectsAddPanel2.updateUI();
     }
 
     private ActionListener addObject = new ActionListener() {
@@ -339,7 +344,7 @@ public class MainUI {
         public void actionPerformed(ActionEvent e) {
             if (MainUI.vprog == null) {
                 JOptionPane.showMessageDialog(null,
-                    "You must open a project to add objects to a scene.", "No Project Open", 0);
+                        "You must open a project to add objects to a scene.", "No Project Open", 0);
             } else {
 
                 // Open previous game frame
@@ -348,28 +353,11 @@ public class MainUI {
                 frame.setSize(new Dimension(300, 200));
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 Container contentPane = frame.getContentPane();
-                final JLabel label = new JLabel("Projects");
-                // locate relative JAR/class location for project storage
-                String dirString = Project.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-                // load the project names from the global projects file
-                projectNames = new ArrayList<String>();
-                try {
-                    File projFile = new File(dirString + "Projects.txt");
-                    BufferedReader br = new BufferedReader(new FileReader(projFile));
-                    String line;
-                    while ((line = br.readLine()) != null) {
-                        projectNames.add(line);
-                    }
-                } catch (IOException ioe) {
-                    ErrorFrame errorFrame = new ErrorFrame(ioe);
-                    return;
-                }
-                // populate selection list
-                String[] projNamesArr = new String[projectNames.size()];
-                projNamesArr = projectNames.toArray(projNamesArr);
-                final JList dataList = new JList(projNamesArr);
+                final JLabel label = new JLabel("Object Type");
+                String[] objectTypes = {"Player", "Enemy", "Background", "Sound"};
+                final JList dataList = new JList(objectTypes);
                 contentPane.add(dataList, BorderLayout.NORTH);
-                final JButton loadButton = new JButton("Load Project (None Selected)");
+                final JButton loadButton = new JButton("Create Object (None Selected)");
                 contentPane.add(loadButton, BorderLayout.SOUTH);
 
                 // track selection
@@ -378,8 +366,8 @@ public class MainUI {
                     @Override
                     public void valueChanged(ListSelectionEvent arg0) {
                         if (!arg0.getValueIsAdjusting()) {
-                            selectedProject = dataList.getSelectedValue().toString();
-                            loadButton.setText("Load Project (" + selectedProject + ")");
+                            selectedObjectType = dataList.getSelectedValue().toString();
+                            loadButton.setText("Create " + selectedObjectType);
                         }
                     }
                 });
@@ -390,35 +378,20 @@ public class MainUI {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if (selectedProject == null) {
-                            System.out.println("No project selected.");
+                        if (selectedObjectType == null) {
+                            System.out.println("No object type selected.");
                         } else {
-                        // load selected project
-                            // reload if application window already open
-                            if (MainUI.vprog != null) {
-                                MainUI.vprog.reloadApp(selectedProject);
-                                frame.dispose();
-                            } else {
-                                MainUI.vprog = new VProgEngine(selectedProject);
-
-                                LwjglApplicationConfiguration config
-                                        = new LwjglApplicationConfiguration();
-                                config.title = selectedProject;
-                                config.x = -1;
-                                config.y = -1;
-                                config.width = Math.min(MainUI.screenBounds.width, 800);
-                                config.height = Math.min(MainUI.screenBounds.height, 600);
-                                config.resizable = true;
-                                config.allowSoftwareMode = true;
-                                new LwjglApplication(MainUI.vprog, config);
+                            // add selected
+                            if (selectedObjectType.equals("Enemy")) {
+                                int eIndex = vprog.addEnemy(0, 300, vprog.ground, 0, 0, 0, 150);
+                                ObjectAssetPanel o = new ObjectAssetPanel(selectedObjectType + String.valueOf(eIndex));
+                                objectsAddPanel2.add(o);
+                                redrawMainUI();
                                 frame.dispose();
                             }
                         }
                     }
                 });
-                ObjectAssetPanel o = new ObjectAssetPanel("test");
-                objectsUploadedPanel2.add(o);
-                redrawMainUI();
             }
         }
     };

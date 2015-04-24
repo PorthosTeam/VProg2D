@@ -11,13 +11,13 @@ import static com.mygdx.game.VProgEngine.prefs;
 public class Player extends Rectangle {
     
     // player spawn point
-    public float x = 100, y = VProgEngine.ground;
+    public float x = 100, y = 36;
     
     // set player speed
     public int hSpeed = 300;
     public int vSpeed = 600;
     public boolean jumpReady = true, jumpDone = false, jumping = false;
-    public float jumpHeight = VProgEngine.ground + 200;
+    public float jumpHeight = 36 + 200;
 
     // set the player sprite (0-2 currently)
     public int playerSpriteIndex = 0;
