@@ -10,40 +10,27 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Component;
 
-import com.mygdx.game.Callback;
-
-public class TextureAssetPanel extends JPanel implements Callback
-{
-    private JLabel metadataLabel;
-    private String metadataString;
+public class ObjectAssetPanel extends JPanel {
+    public String objectName;
     public JPanel parentPanel;
     
-    public TextureAssetPanel(String filename)
+    public ObjectAssetPanel(String name)
     {
         super();
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
         setMaximumSize(new Dimension(200, 50));
         
-        ImageIcon icon = new ImageIcon(filename);
-        metadataString = icon.getIconWidth() + "x" + icon.getIconHeight();
-        Image image = icon.getImage();
-        icon.setImage(image.getScaledInstance(50, 50, Image.SCALE_DEFAULT));
-        
-        JLabel iconContainer = new JLabel();
-        iconContainer.setIcon(icon);
-        
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.PAGE_AXIS));
         
-        JTextField nameText = new JTextField(filename);
+        JTextField nameText = new JTextField(name);
         nameText.setEditable(false);
         
-        metadataLabel = new JLabel("Loading...");
+        JLabel metadataLabel = new JLabel("Loading...");
         
         infoPanel.add(nameText);
         infoPanel.add(metadataLabel);
         
-        add(iconContainer);
         add(infoPanel);
         
         LineBorder border = new LineBorder(null);
@@ -52,10 +39,4 @@ public class TextureAssetPanel extends JPanel implements Callback
         setAlignmentX(Component.LEFT_ALIGNMENT);
     }
     
-    @Override
-    public void call()
-    {
-        metadataLabel.setText(metadataString);
-        parentPanel.updateUI();
-    }
 }

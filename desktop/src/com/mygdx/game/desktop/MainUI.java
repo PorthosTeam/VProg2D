@@ -48,7 +48,6 @@ public class MainUI {
 
     // existing projects list
     // Actions for each of the menu buttons.
-    
     // Create new project
     private ActionListener newProjectAction = new ActionListener() {
         @Override
@@ -99,7 +98,7 @@ public class MainUI {
             contentPane.add(dataList, BorderLayout.NORTH);
             final JButton loadButton = new JButton("Load Project (None Selected)");
             contentPane.add(loadButton, BorderLayout.SOUTH);
-            
+
             // track selection
             dataList.addListSelectionListener(new ListSelectionListener() {
 
@@ -112,7 +111,7 @@ public class MainUI {
                 }
             });
             frame.setVisible(true);
-            
+
             // open a project once a project is selected
             loadButton.addActionListener(new ActionListener() {
 
@@ -126,21 +125,20 @@ public class MainUI {
                         if (MainUI.vprog != null) {
                             MainUI.vprog.reloadApp(selectedProject);
                             frame.dispose();
-                        }
-                        else {
-                        MainUI.vprog = new VProgEngine(selectedProject);
+                        } else {
+                            MainUI.vprog = new VProgEngine(selectedProject);
 
-                        LwjglApplicationConfiguration config
-                                = new LwjglApplicationConfiguration();
-                        config.title = selectedProject;
-                        config.x = -1;
-                        config.y = -1;
-                        config.width = Math.min(MainUI.screenBounds.width, 800);
-                        config.height = Math.min(MainUI.screenBounds.height, 600);
-                        config.resizable = true;
-                        config.allowSoftwareMode = true;
-                        new LwjglApplication(MainUI.vprog, config);
-                        frame.dispose();
+                            LwjglApplicationConfiguration config
+                                    = new LwjglApplicationConfiguration();
+                            config.title = selectedProject;
+                            config.x = -1;
+                            config.y = -1;
+                            config.width = Math.min(MainUI.screenBounds.width, 800);
+                            config.height = Math.min(MainUI.screenBounds.height, 600);
+                            config.resizable = true;
+                            config.allowSoftwareMode = true;
+                            new LwjglApplication(MainUI.vprog, config);
+                            frame.dispose();
                         }
                     }
                 }
@@ -192,15 +190,14 @@ public class MainUI {
 
     private JPanel texturesUploadedPanel;
     private JPanel objectsUploadedPanel2;
-    public MainUI()
-    {
+
+    public MainUI() {
         screenBounds = WindowBoundsChecker.getWindowBounds();
 
         launchMainWindow(screenBounds);
     }
 
-    private JMenuBar buildMenuBar()
-    {
+    private JMenuBar buildMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
         JMenuHelper fileMenu = new JMenuHelper("File");
@@ -213,7 +210,7 @@ public class MainUI {
         projectMenu.add("Construct", "construct_small.png", constructAction);
         projectMenu.add("Run", "runProgram_small.png", runProgramAction);
         projectMenu.add("Freeze", "pauseProgram_small.png",
-            freezeProgramAction);
+                freezeProgramAction);
         menuBar.add(projectMenu.jMenu());
 
         JMenuHelper helpMenu = new JMenuHelper("Help");
@@ -222,7 +219,7 @@ public class MainUI {
 
         return menuBar;
     }
-    
+
     private void launchMainWindow(Rectangle bounds) {
         JMenuBar menuBar = buildMenuBar();
 
@@ -242,68 +239,66 @@ public class MainUI {
 
         JPanel imageUploadPanel = new JPanel();
         imageUploadPanel.setLayout(
-            new BoxLayout(imageUploadPanel, BoxLayout.PAGE_AXIS)
+                new BoxLayout(imageUploadPanel, BoxLayout.PAGE_AXIS)
         );
         imageUploadPanel.setPreferredSize(new Dimension(230, 0));
-        
+
         JButton imageUploadButton
-            = new JButton("Upload Texture", new ImageIcon("uploadAsset.png"));
+                = new JButton("Upload Texture", new ImageIcon("uploadAsset.png"));
         imageUploadButton.addActionListener(uploadTexture);
         imageUploadButton.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
+
         texturesUploadedPanel = new JPanel();
         texturesUploadedPanel.setLayout(
-            new BoxLayout(texturesUploadedPanel, BoxLayout.PAGE_AXIS)
+                new BoxLayout(texturesUploadedPanel, BoxLayout.PAGE_AXIS)
         );
         texturesUploadedPanel.setMaximumSize(new Dimension(220, 0));
         texturesUploadedPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
+
         JScrollPane imagesScrollPane = new JScrollPane(texturesUploadedPanel);
         imagesScrollPane.setPreferredSize(new Dimension(220, 0));
         imagesScrollPane.setHorizontalScrollBarPolicy(
-            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         imagesScrollPane.setVerticalScrollBarPolicy(
-            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         imagesScrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
+
         imageUploadPanel.add(imageUploadButton);
         imageUploadPanel.add(imagesScrollPane);
-        
+
         frameContainer.add(imageUploadPanel, BorderLayout.WEST);
-        
-               
-        
+
         JPanel objectsUploadPanel = new JPanel();
         objectsUploadPanel.setLayout(
-            new BoxLayout(objectsUploadPanel, BoxLayout.PAGE_AXIS)
+                new BoxLayout(objectsUploadPanel, BoxLayout.PAGE_AXIS)
         );
         objectsUploadPanel.setPreferredSize(new Dimension(230, 0));
-        
+
         JButton objectsUploadButton
-            = new JButton("Add New Object", new ImageIcon("uploadAsset.png"));
-        objectsUploadButton.addActionListener(uploadTexture);
+                = new JButton("Add New Object", new ImageIcon("uploadAsset.png"));
+        objectsUploadButton.addActionListener(addObject);
         objectsUploadButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
+
         objectsUploadedPanel2 = new JPanel();
         objectsUploadedPanel2.setLayout(
-            new BoxLayout(objectsUploadedPanel2, BoxLayout.PAGE_AXIS)
+                new BoxLayout(objectsUploadedPanel2, BoxLayout.PAGE_AXIS)
         );
         objectsUploadedPanel2.setMaximumSize(new Dimension(220, 0));
         objectsUploadedPanel2.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
+
         JScrollPane objectsScrollPane = new JScrollPane(objectsUploadedPanel2);
         objectsScrollPane.setPreferredSize(new Dimension(220, 0));
         objectsScrollPane.setHorizontalScrollBarPolicy(
-            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         objectsScrollPane.setVerticalScrollBarPolicy(
-            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         objectsScrollPane.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        
+
         objectsUploadPanel.add(objectsUploadButton);
         objectsUploadPanel.add(objectsScrollPane);
-        
+
         frameContainer.add(objectsUploadPanel, BorderLayout.EAST);
-        
+
         wrapperFrame.setVisible(true);
     }
 
@@ -327,8 +322,104 @@ public class MainUI {
             }
             TextureAssetPanel t = new TextureAssetPanel(filepath);
             texturesUploadedPanel.add(t);
+            redrawMainUI();
+            t.parentPanel = texturesUploadedPanel;
             vprog.queuedAssetChaperone.add(filepath, t);
             vprog.loadTexture(filepath);
+        }
+    };
+
+    public void redrawMainUI() {
+        texturesUploadedPanel.updateUI();
+        objectsUploadedPanel2.updateUI();
+    }
+
+    private ActionListener addObject = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (MainUI.vprog == null) {
+                JOptionPane.showMessageDialog(null,
+                    "You must open a project to add objects to a scene.", "No Project Open", 0);
+            } else {
+
+                // Open previous game frame
+                frame = new JFrame("Create Object");
+                frame.setLocationRelativeTo(null);
+                frame.setSize(new Dimension(300, 200));
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                Container contentPane = frame.getContentPane();
+                final JLabel label = new JLabel("Projects");
+                // locate relative JAR/class location for project storage
+                String dirString = Project.class.getProtectionDomain().getCodeSource().getLocation().getFile();
+                // load the project names from the global projects file
+                projectNames = new ArrayList<String>();
+                try {
+                    File projFile = new File(dirString + "Projects.txt");
+                    BufferedReader br = new BufferedReader(new FileReader(projFile));
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        projectNames.add(line);
+                    }
+                } catch (IOException ioe) {
+                    ErrorFrame errorFrame = new ErrorFrame(ioe);
+                    return;
+                }
+                // populate selection list
+                String[] projNamesArr = new String[projectNames.size()];
+                projNamesArr = projectNames.toArray(projNamesArr);
+                final JList dataList = new JList(projNamesArr);
+                contentPane.add(dataList, BorderLayout.NORTH);
+                final JButton loadButton = new JButton("Load Project (None Selected)");
+                contentPane.add(loadButton, BorderLayout.SOUTH);
+
+                // track selection
+                dataList.addListSelectionListener(new ListSelectionListener() {
+
+                    @Override
+                    public void valueChanged(ListSelectionEvent arg0) {
+                        if (!arg0.getValueIsAdjusting()) {
+                            selectedProject = dataList.getSelectedValue().toString();
+                            loadButton.setText("Load Project (" + selectedProject + ")");
+                        }
+                    }
+                });
+                frame.setVisible(true);
+
+                // open a project once a project is selected
+                loadButton.addActionListener(new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (selectedProject == null) {
+                            System.out.println("No project selected.");
+                        } else {
+                        // load selected project
+                            // reload if application window already open
+                            if (MainUI.vprog != null) {
+                                MainUI.vprog.reloadApp(selectedProject);
+                                frame.dispose();
+                            } else {
+                                MainUI.vprog = new VProgEngine(selectedProject);
+
+                                LwjglApplicationConfiguration config
+                                        = new LwjglApplicationConfiguration();
+                                config.title = selectedProject;
+                                config.x = -1;
+                                config.y = -1;
+                                config.width = Math.min(MainUI.screenBounds.width, 800);
+                                config.height = Math.min(MainUI.screenBounds.height, 600);
+                                config.resizable = true;
+                                config.allowSoftwareMode = true;
+                                new LwjglApplication(MainUI.vprog, config);
+                                frame.dispose();
+                            }
+                        }
+                    }
+                });
+                ObjectAssetPanel o = new ObjectAssetPanel("test");
+                objectsUploadedPanel2.add(o);
+                redrawMainUI();
+            }
         }
     };
 }
