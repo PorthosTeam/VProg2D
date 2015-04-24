@@ -24,7 +24,7 @@ public class QueuedAssetChaperone
 {
     private AssetManager manager;
     private Array<String> assets;
-    private Array<Callable> callable;
+    private Array<Callable> callables;
     
     public QueuedAssetChaperone(AssetManager _manager)
     {
