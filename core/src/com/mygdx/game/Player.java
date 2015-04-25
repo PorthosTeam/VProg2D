@@ -18,6 +18,7 @@ public class Player extends Rectangle {
     public int vSpeed = 600;
     public boolean jumpReady = true, jumpDone = false, jumping = false;
     public float jumpHeight = 36 + 200;
+    public int jumpFXIndex = 0;
 
     // set the player sprite (0-2 currently)
     public int playerSpriteIndex = 0;
@@ -60,4 +61,8 @@ public class Player extends Rectangle {
         }
     }
     
+    // swaps between the pre-set player sprites
+    public void setJumpFX(int index) {
+            jumpFXIndex = index;
+    }
 }
