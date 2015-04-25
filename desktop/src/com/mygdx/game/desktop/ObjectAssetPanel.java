@@ -25,11 +25,13 @@ public class ObjectAssetPanel extends JPanel {
     public JPanel parentPanel;
     private String type;
     private int enemyNum;
+    int soundSelection;
 
     public ObjectAssetPanel(String name, String t, int eNum) {
         super();
         type = t;
         enemyNum = eNum - 1;
+        soundSelection = 0;
         setLayout(new BorderLayout(0, 0));
         setMaximumSize(new Dimension(200, 29));
 
@@ -188,7 +190,6 @@ public class ObjectAssetPanel extends JPanel {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             MainUI.vprog.bgIndex = ((Integer) ((JComboBox) e.getSource()).getSelectedItem()) - 1;
-                            System.out.println(MainUI.vprog.bgIndex);
                         }
                     });
                     bgPanel.add(comboBox);
@@ -196,7 +197,7 @@ public class ObjectAssetPanel extends JPanel {
                     frame.add(bgPanel);
 
                 } else if (type.equals("bgm")) {
-                    frame.setSize(new Dimension(310, 75));
+                    frame.setSize(new Dimension(310, 150));
                     int size = MainUI.vprog.bgms.size;
                     Array<Integer> bgms = new Array<Integer>();
                     for (int i = 1; i <= size; ++i) {
@@ -214,7 +215,7 @@ public class ObjectAssetPanel extends JPanel {
                     comboBox.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            MainUI.vprog.bgmIndex = ((Integer) ((JComboBox) e.getSource()).getSelectedItem()) - 1;
+                            MainUI.vprog.setMusic(((Integer) ((JComboBox) e.getSource()).getSelectedItem()) - 1);
                         }
                     });
                     bgmPanel.add(comboBox);
@@ -238,6 +239,59 @@ public class ObjectAssetPanel extends JPanel {
                     bgmPanel.add(stopBtn);
                     frame.add(bgmPanel);
 
+                } else if (type.equals("sounds")) {
+                    frame.setSize(new Dimension(400, 75));
+                    int size = MainUI.vprog.sounds.size;
+                    Array<Integer> sounds = new Array<Integer>();
+                    for (int i = 1; i <= size; ++i) {
+                        sounds.add(i);
+                    }
+                    Integer[] soundsArray = sounds.toArray(Integer.class);
+                    JPanel soundPanel = new JPanel();
+                    soundPanel.setAlignmentX(LEFT_ALIGNMENT);
+                    soundPanel.add(new JLabel("Background: ", JLabel.LEFT));
+                    JComboBox comboBox = new JComboBox();
+                    int count = 0;
+                    for (int i = 0; i < soundsArray.length; i++) {
+                        comboBox.addItem(soundsArray[count++]);
+                    }
+                    comboBox.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            soundSelection = ((Integer) ((JComboBox) e.getSource()).getSelectedItem()) - 1;
+                        }
+                    });
+                    soundPanel.add(comboBox);
+                    
+                    JButton playBtn = new JButton("Play");
+                    playBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
+                    playBtn.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            MainUI.vprog.playSound(soundSelection);
+                        }
+                    });
+                    soundPanel.add(playBtn);
+                    JButton stopBtn = new JButton("Stop");
+                    stopBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
+                    stopBtn.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            MainUI.vprog.stopSound(soundSelection);
+                        }
+                    });
+                    soundPanel.add(stopBtn);
+                    JButton jumpBtn = new JButton("Set as Jump FX");
+                    jumpBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
+                    jumpBtn.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            MainUI.vprog.playerInstance.setJumpFX(soundSelection);
+                        }
+                    });
+                    soundPanel.add(jumpBtn);
+                    
+                    frame.add(soundPanel);
                 } else if (type.equals("enemy")) {
                     frame.setSize(new Dimension(250, 350));
                     final Enemy selectedEnemy = MainUI.vprog.enemies.get(enemyNum);

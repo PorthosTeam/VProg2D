@@ -281,11 +281,15 @@ public class MainUI implements Callable {
         objectsAddPanel.setLayout(new BoxLayout(objectsAddPanel, BoxLayout.PAGE_AXIS)
         );
         objectsAddPanel.setPreferredSize(new Dimension(200, 0));
+        
+        JLabel icon = new JLabel(new ImageIcon("logo_center.png"));
+        frameContainer.add(icon, BorderLayout.CENTER);
 
         JButton objectsAddButton
-                = new JButton("Add New Object", new ImageIcon("uploadAsset.png"));
+                = new JButton("Add Object", new ImageIcon("plusSign.png"));
         objectsAddButton.addActionListener(addObject);
         objectsAddButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        //objectsAddButton.setMinimumSize(new Dimension (400, 0));
 
         objectsAddPanel2 = new JPanel();
         objectsAddPanel2.setLayout(new BoxLayout(objectsAddPanel2, BoxLayout.PAGE_AXIS)
@@ -299,7 +303,7 @@ public class MainUI implements Callable {
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         objectsScrollPane.setVerticalScrollBarPolicy(
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        objectsScrollPane.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        objectsScrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         objectsAddPanel.add(objectsAddButton);
         objectsAddPanel.add(objectsScrollPane);
@@ -403,7 +407,6 @@ public class MainUI implements Callable {
 
         // loading finished signal
         if (((String) argv[0]).equals("load")) {
-            System.out.println("called");
             objectsAddPanel2.add(new ObjectAssetPanel("Player", "player", -1));
             objectsAddPanel2.add(new ObjectAssetPanel("Background", "bg", -1));
             objectsAddPanel2.add(new ObjectAssetPanel("BGM", "bgm", -1));

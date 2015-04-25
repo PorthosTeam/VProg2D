@@ -150,6 +150,9 @@ public class VProgEngine extends ApplicationAdapter {
         sounds.add(Gdx.audio.newSound(Gdx.files.internal("menu.wav")));
         bgms = new Array<Music>();
         bgms.add(Gdx.audio.newMusic(Gdx.files.internal("bgm1.ogg")));
+        bgms.add(Gdx.audio.newMusic(Gdx.files.internal("bgm2.ogg")));
+        bgms.add(Gdx.audio.newMusic(Gdx.files.internal("bgm3.mp3")));
+        bgms.add(Gdx.audio.newMusic(Gdx.files.internal("bgm4.mp3")));
 
         // Text
         text = new BitmapFont();
@@ -170,6 +173,9 @@ public class VProgEngine extends ApplicationAdapter {
 
     // set the bgm music
     public void setMusic(int num) {
+        // stop prev track if playing
+        bgms.get(bgmIndex).setLooping(false);
+        bgms.get(bgmIndex).stop();
         bgmIndex = num;
     }
     
@@ -184,11 +190,15 @@ public class VProgEngine extends ApplicationAdapter {
         bgms.get(bgmIndex).stop();
     }
 
-    // set / play a sound file
+    // play a sound file
     public void playSound(int num) {
         sounds.get(num).play();
     }
     
+    // stop a sound file
+    public void stopSound(int num) {
+        sounds.get(num).stop();
+    }
 
     @Override
     public void render() {
@@ -267,7 +277,7 @@ public class VProgEngine extends ApplicationAdapter {
                 || Gdx.input.isKeyJustPressed(Keys.W)
                 || Gdx.input.isKeyJustPressed(Keys.UP)) {
             if (playerInstance.jumpReady == true) {
-                playSound(0);
+                playSound(playerInstance.jumpFXIndex);
                 playerInstance.jumpReady = false;
                 playerInstance.jumping = true;
             }
@@ -289,7 +299,7 @@ public class VProgEngine extends ApplicationAdapter {
         }
 
         // Various buttons to test functionalites
-        // swap player sprite
+        /* swap player sprite
         if (Gdx.input.isKeyPressed(Keys.NUM_1)) {
             playerInstance.changePlayer(0);
         }
@@ -298,22 +308,22 @@ public class VProgEngine extends ApplicationAdapter {
         }
         if (Gdx.input.isKeyPressed(Keys.NUM_3)) {
             playerInstance.changePlayer(2);
-        }
+        }*/
 
-        // set music + play
+        /*set music + play
         if (Gdx.input.isKeyJustPressed(Keys.M)) {
             setMusic(0);
-        }
+        }*/
 
-        // set sound + play
+        /* set sound + play
         if (Gdx.input.isKeyJustPressed(Keys.S)) {
             playSound(0);
-        }
+        }*/
         
-        // save scene
+        /* save scene
         if (Gdx.input.isKeyJustPressed(Keys.P)) {
             this.saveEnginePrefs();
-        }
+        }*/
         
         // debug key
         if (Gdx.input.isKeyJustPressed(Keys.CONTROL_RIGHT)) {
@@ -333,37 +343,37 @@ public class VProgEngine extends ApplicationAdapter {
             circles.add(newCircle);
         }
 
-        // spawn a random enemy on the ground
+        /*spawn a random enemy on the ground
         if (Gdx.input.isKeyJustPressed(Keys.E)) {
             int enemType = new Random().nextInt(2);
             addEnemy(enemType, (int) Gdx.input.getX(), (int) ground, 0, 0, 0, 150);
-        }
+        }*/
 
-        // set first enemy to patrolling
+        /* set first enemy to patrolling
         if (Gdx.input.isKeyJustPressed(Keys.O)) {
             if (enemies.size > 0) {
                 Enemy e = enemies.get(0);
                 e.SetPatrolPoints((int)e.x - 100, (int)e.x + 100);
             }
-        }
+        }*/
 
-        // stop  first enemy from patrolling
+        /* stop  first enemy from patrolling
         if (Gdx.input.isKeyJustPressed(Keys.I)) {
             if (enemies.size > 0) {
                 enemies.get(0).stopPatrol();
             }
-        }
+        }*/
         
-        // save the scene
+        /* save the scene
         if (Gdx.input.isKeyJustPressed(Keys.NUM_0)) {
             saveScene();
-        }
+        }*/
 
         // render circles
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(0, 0, 0, 1);
         for (Circle circle : circles) {
-            shapeRenderer.circle(circle.x, circle.y, 10);
+            shapeRenderer.circle(circle.x, circle.y, 5);
         }
         shapeRenderer.end();
 
@@ -373,19 +383,18 @@ public class VProgEngine extends ApplicationAdapter {
             enemies.clear();
             for (int i = 1; prefs.contains("Enemy" + String.valueOf(i)); i++) {
                 prefs.remove("Enemy" + String.valueOf(i));
-                System.out.println("Enemy" + String.valueOf(i));
             }
             saveEnginePrefs();
         }
 
-        // Change background
+        /* Change background
         if (Gdx.input.isKeyJustPressed(Keys.B)) {
             if (backgrounds.size == 4) {
                 bgIndex = new Random().nextInt(4);
             } else {
                 bgIndex = new Random().nextInt(5);
             }
-        }
+        }*/
 
         // make sure the player stays within the screen bounds
         if (playerInstance.x < leftBound) {
