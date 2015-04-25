@@ -87,6 +87,16 @@ public class Mover extends Doodad implements SimulatableMovable
 	xSpeed = ySpeed = xAccel = yAccel = 0;
     }
     
+    // Copy constructor
+    public Mover(Mover mover)
+    {
+        super(mover);
+        xSpeed = mover.xSpeed;
+        ySpeed = mover.ySpeed;
+        xAccel = mover.xAccel;
+        yAccel = mover.yAccel;
+    }
+    
     public Rectangle simulateMove(float interval_s)
     {
         float xSpeed = this.xSpeed + (this.xAccel * interval_s);

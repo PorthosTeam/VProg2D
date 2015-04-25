@@ -39,6 +39,13 @@ public class Doodad extends Rectangle implements Drawable
         this.setTexture(_texture);
     }
     
+    // Copy constructor
+    public Doodad(Doodad doodad)
+    {
+        super(doodad);
+        this.setTexture(doodad.texture);
+    }
+    
     public void setTexture(Texture _texture)
     {
         texture = _texture;

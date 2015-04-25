@@ -4,7 +4,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.Texture;
 
-public class Collider extends Mover implements Collidable
+public class Collider extends Mover implements SimulatableCollidable
 {
     private CollisionFunction collisionFunction;
     
@@ -69,6 +69,30 @@ public class Collider extends Mover implements Collidable
     {
         super(texture);
         collisionFunction = _collisionFunction;
+    }
+    
+    // Copy constructor
+    public Collider(Collider collider)
+    {
+        super(collider);
+        collisionFunction = collider.collisionFunction;
+    }
+    
+    public Object simulateCollide(Collision[] collisions)
+    {
+        Collider newStateHolder = new Collider(this);
+        newStateHolder.collide(collisions);
+        return newStateHolder;
+    }
+    
+    public void commitCollide(Object newStateHolder)
+    {
+        x = ((Collider )newStateHolder).x;
+        y = ((Collider )newStateHolder).y;
+        xSpeed = ((Collider )newStateHolder).xSpeed;
+        ySpeed = ((Collider )newStateHolder).ySpeed;
+        xAccel = ((Collider )newStateHolder).xAccel;
+        yAccel = ((Collider )newStateHolder).yAccel;
     }
     
     public void collide(Collision[] collisions)
