@@ -406,6 +406,8 @@ public class MainUI implements Callable {
             System.out.println("called");
             objectsAddPanel2.add(new ObjectAssetPanel("Player", "player", -1));
             objectsAddPanel2.add(new ObjectAssetPanel("Background", "bg", -1));
+            objectsAddPanel2.add(new ObjectAssetPanel("BGM", "bgm", -1));
+            objectsAddPanel2.add(new ObjectAssetPanel("Sounds", "sounds", -1));
             for (enemyCount = 1; enemyCount <= vprog.enemies.size; enemyCount++) {
                 ObjectAssetPanel o = new ObjectAssetPanel("Enemy" + String.valueOf(enemyCount), "enemy", enemyCount);
                 objectsAddPanel2.add(o);

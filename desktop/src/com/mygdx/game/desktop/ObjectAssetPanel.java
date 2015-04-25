@@ -3,6 +3,7 @@ package com.mygdx.game.desktop;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import java.awt.BorderLayout;
+import javax.swing.BoxLayout;
 import javax.swing.border.LineBorder;
 import java.awt.Dimension;
 import java.awt.Component;
@@ -32,9 +33,9 @@ public class ObjectAssetPanel extends JPanel {
         setLayout(new BorderLayout(0, 0));
         setMaximumSize(new Dimension(200, 29));
 
-        JButton nameBtn = new JButton(name);
-        nameBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
-        nameBtn.addActionListener(new ActionListener() {
+        JButton objBtn = new JButton(name);
+        objBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
+        objBtn.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -193,6 +194,49 @@ public class ObjectAssetPanel extends JPanel {
                     bgPanel.add(comboBox);
 
                     frame.add(bgPanel);
+
+                } else if (type.equals("bgm")) {
+                    frame.setSize(new Dimension(310, 75));
+                    int size = MainUI.vprog.bgms.size;
+                    Array<Integer> bgms = new Array<Integer>();
+                    for (int i = 1; i <= size; ++i) {
+                        bgms.add(i);
+                    }
+                    Integer[] bgmsArray = bgms.toArray(Integer.class);
+                    JPanel bgmPanel = new JPanel();
+                    bgmPanel.setAlignmentX(LEFT_ALIGNMENT);
+                    bgmPanel.add(new JLabel("Background Music: ", JLabel.LEFT));
+                    JComboBox comboBox = new JComboBox();
+                    int count = 0;
+                    for (int i = 0; i < bgmsArray.length; i++) {
+                        comboBox.addItem(bgmsArray[count++]);
+                    }
+                    comboBox.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            MainUI.vprog.bgmIndex = ((Integer) ((JComboBox) e.getSource()).getSelectedItem()) - 1;
+                        }
+                    });
+                    bgmPanel.add(comboBox);
+                    JButton playBtn = new JButton("Play");
+                    playBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
+                    playBtn.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            MainUI.vprog.playMusic();
+                        }
+                    });
+                    bgmPanel.add(playBtn);
+                    JButton stopBtn = new JButton("Stop");
+                    stopBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
+                    stopBtn.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            MainUI.vprog.stopMusic();
+                        }
+                    });
+                    bgmPanel.add(stopBtn);
+                    frame.add(bgmPanel);
 
                 } else if (type.equals("enemy")) {
                     frame.setSize(new Dimension(250, 350));
@@ -359,7 +403,7 @@ public class ObjectAssetPanel extends JPanel {
             }
         });
 
-        add(nameBtn, BorderLayout.NORTH);
+        add(objBtn, BorderLayout.NORTH);
 
         LineBorder border = new LineBorder(null);
         setBorder(border);

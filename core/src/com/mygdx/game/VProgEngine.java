@@ -82,16 +82,18 @@ public class VProgEngine extends ApplicationAdapter {
     public int bgIndex = 0;
 
     // Text
-    private BitmapFont text;
+    public BitmapFont text;
 
     // Used to insert a circle at mouse position
     // also a crude form of drawing
-    private ShapeRenderer shapeRenderer;
+    public ShapeRenderer shapeRenderer;
     public Array<Circle> circles;
 
     // Audio assets
-    private Array<Sound> sounds;
-    private Array<Music> bgms;
+    public Array<Sound> sounds;
+    public Array<Music> bgms;
+    
+    public int bgmIndex = 0;
 
     // The infamous node. If only we knew how to use it.
     private Node node;
@@ -166,16 +168,27 @@ public class VProgEngine extends ApplicationAdapter {
         doodad = new Doodad(50, 50, 50, 50, enemySprites.get(1));
     }
 
-    // set the bgm music (also plays it)
-    public void changeMusic(int num) {
-        bgms.get(num).setLooping(true);
-        bgms.get(num).play();
+    // set the bgm music
+    public void setMusic(int num) {
+        bgmIndex = num;
+    }
+    
+    // play the bgm music
+    public void playMusic() {
+        bgms.get(bgmIndex).setLooping(true);
+        bgms.get(bgmIndex).play();
+    }
+    
+    // stop the bgm music
+    public void stopMusic() {
+        bgms.get(bgmIndex).stop();
     }
 
     // set / play a sound file
     public void playSound(int num) {
         sounds.get(num).play();
     }
+    
 
     @Override
     public void render() {
@@ -289,7 +302,7 @@ public class VProgEngine extends ApplicationAdapter {
 
         // set music + play
         if (Gdx.input.isKeyJustPressed(Keys.M)) {
-            changeMusic(0);
+            setMusic(0);
         }
 
         // set sound + play
