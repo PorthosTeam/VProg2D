@@ -371,9 +371,9 @@ public class ObjectAssetPanel extends JPanel {
                     patComboBox.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            if (((String) ((JComboBox) e.getSource()).getSelectedItem()).equals("Patrolling")) {
+                            if (((String) ((JComboBox) e.getSource()).getSelectedItem()).equals("On")) {
                                 selectedEnemy.patrolling = true;
-                            } else if (((String) ((JComboBox) e.getSource()).getSelectedItem()).equals("Not Patrolling")) {
+                            } else if (((String) ((JComboBox) e.getSource()).getSelectedItem()).equals("Off")) {
                                 selectedEnemy.patrolling = false;
                             }
                             if (selectedEnemy.patrolling) {
