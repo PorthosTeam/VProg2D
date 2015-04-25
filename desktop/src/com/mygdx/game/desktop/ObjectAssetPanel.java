@@ -18,6 +18,7 @@ import javax.swing.JComboBox;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.Player;
 import com.mygdx.game.Enemy;
+import javax.swing.SpringLayout;
 
 public class ObjectAssetPanel extends JPanel {
 
@@ -44,25 +45,19 @@ public class ObjectAssetPanel extends JPanel {
                 JFrame frame = new JFrame("Edit Object");
                 frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 frame.setLocationRelativeTo(null);
-                frame.setLayout(new FlowLayout(FlowLayout.LEFT));
                 // Check object type
                 if (type.equals("player")) {
-                    frame.setSize(new Dimension(250, 300));
                     final Player p = MainUI.vprog.playerInstance;
 
                     // name
-                    JPanel namePanel = new JPanel();
-                    namePanel.setAlignmentX(LEFT_ALIGNMENT);
-                    namePanel.add(new JLabel("Name: ", JLabel.CENTER));
+                    JPanel playerPanel = new JPanel(new SpringLayout());
+                    playerPanel.add(new JLabel("Name: "));
                     JTextField name = new JTextField(16);
                     name.setText("Player");
-                    namePanel.add(name);
-                    frame.add(namePanel);
+                    playerPanel.add(name);
 
-                    // sprite
-                    JPanel spritePanel = new JPanel();
-                    spritePanel.setAlignmentX(LEFT_ALIGNMENT);
-                    spritePanel.add(new JLabel("Sprite: ", JLabel.LEFT));
+                    // sprites
+                    playerPanel.add(new JLabel("Sprite: "));
                     String[] spriteList = {"GNU", "Linux", "Android"};
                     JComboBox comboBox = new JComboBox();
                     int count = 0;
@@ -81,13 +76,10 @@ public class ObjectAssetPanel extends JPanel {
                             }
                         }
                     });
-                    spritePanel.add(comboBox);
-                    frame.add(spritePanel);
+                    playerPanel.add(comboBox);
 
                     // x pos
-                    JPanel xPanel = new JPanel();
-                    xPanel.setAlignmentX(LEFT_ALIGNMENT);
-                    xPanel.add(new JLabel("Position (X): ", JLabel.LEFT));
+                    playerPanel.add(new JLabel("Position (X): "));
                     final JTextField x = new JTextField(10);
                     x.setText(String.valueOf((int) p.x));
                     x.addActionListener(new ActionListener() {
@@ -98,13 +90,10 @@ public class ObjectAssetPanel extends JPanel {
                             p.x = Integer.parseInt(x.getText());
                         }
                     });
-                    xPanel.add(x);
-                    frame.add(xPanel);
+                    playerPanel.add(x);
 
                     // y pos
-                    JPanel yPanel = new JPanel();
-                    yPanel.setAlignmentX(LEFT_ALIGNMENT);
-                    yPanel.add(new JLabel("Position (Y): ", JLabel.LEFT));
+                    playerPanel.add(new JLabel("Position (Y): "));
                     final JTextField y = new JTextField(10);
                     y.setText(String.valueOf((int) p.y));
                     y.addActionListener(new ActionListener() {
@@ -115,13 +104,10 @@ public class ObjectAssetPanel extends JPanel {
                             p.y = Integer.parseInt(y.getText());
                         }
                     });
-                    yPanel.add(y);
-                    frame.add(yPanel);
+                    playerPanel.add(y);
 
                     // hSpeed
-                    JPanel hPanel = new JPanel();
-                    hPanel.setAlignmentX(LEFT_ALIGNMENT);
-                    hPanel.add(new JLabel("Run Speed:    ", JLabel.LEFT));
+                    playerPanel.add(new JLabel("Run Speed: "));
                     final JTextField run = new JTextField(10);
                     run.setText(String.valueOf((int) p.hSpeed));
                     run.addActionListener(new ActionListener() {
@@ -132,13 +118,10 @@ public class ObjectAssetPanel extends JPanel {
                             p.hSpeed = Integer.parseInt(run.getText());
                         }
                     });
-                    hPanel.add(run);
-                    frame.add(hPanel);
+                    playerPanel.add(run);
 
                     // vSpeed
-                    JPanel vPanel = new JPanel();
-                    vPanel.setAlignmentX(LEFT_ALIGNMENT);
-                    vPanel.add(new JLabel("Gravity:      ", JLabel.LEFT));
+                    playerPanel.add(new JLabel("Gravity: "));
                     final JTextField grav = new JTextField(10);
                     grav.setText(String.valueOf((int) p.vSpeed));
                     grav.addActionListener(new ActionListener() {
@@ -149,15 +132,11 @@ public class ObjectAssetPanel extends JPanel {
                             p.vSpeed = Integer.parseInt(grav.getText());
                         }
                     });
-                    vPanel.add(grav);
-                    frame.add(vPanel);
+                    playerPanel.add(grav);
 
                     // jHeight
-                    JPanel jPanel = new JPanel();
-                    jPanel.setAlignmentX(LEFT_ALIGNMENT);
-                    jPanel.add(new JLabel("Jump Height:  ", JLabel.LEFT));
+                    playerPanel.add(new JLabel("Jump Height: "));
                     final JTextField jump = new JTextField(10);
-                    jump.setAlignmentX(RIGHT_ALIGNMENT);
                     jump.setText(String.valueOf((int) p.jumpHeight));
                     jump.addActionListener(new ActionListener() {
 
@@ -167,20 +146,24 @@ public class ObjectAssetPanel extends JPanel {
                             p.jumpHeight = Integer.parseInt(jump.getText());
                         }
                     });
-                    jPanel.add(jump);
-                    frame.add(jPanel);
+                    playerPanel.add(jump);
+                    SpringUtilities.makeCompactGrid(playerPanel,
+                            7, 2, //rows, cols
+                            6, 6, //initX, initY
+                            12, 12);       //xPad, yPad
+                    playerPanel.setOpaque(true); //content panes must be opaque
+                    frame.setContentPane(playerPanel);
+                    frame.pack();
 
                 } else if (type.equals("bg")) {
-                    frame.setSize(new Dimension(150, 175));
+                    JPanel bgPanel = new JPanel(new SpringLayout());
                     int size = MainUI.vprog.backgrounds.size;
                     Array<Integer> bgs = new Array<Integer>();
                     for (int i = 1; i <= size; ++i) {
                         bgs.add(i);
                     }
                     Integer[] bgsArray = bgs.toArray(Integer.class);
-                    JPanel bgPanel = new JPanel();
-                    bgPanel.setAlignmentX(LEFT_ALIGNMENT);
-                    bgPanel.add(new JLabel("Background: ", JLabel.LEFT));
+                    bgPanel.add(new JLabel("Background: "));
                     JComboBox comboBox = new JComboBox();
                     int count = 0;
                     for (int i = 0; i < bgsArray.length; i++) {
@@ -193,20 +176,24 @@ public class ObjectAssetPanel extends JPanel {
                         }
                     });
                     bgPanel.add(comboBox);
-
-                    frame.add(bgPanel);
+                    
+                    SpringUtilities.makeCompactGrid(bgPanel,
+                            1, 2, //rows, cols
+                            6, 6, //initX, initY
+                            12, 120);       //xPad, yPad
+                    bgPanel.setOpaque(true); //content panes must be opaque
+                    frame.setContentPane(bgPanel);
+                    frame.pack();
 
                 } else if (type.equals("bgm")) {
-                    frame.setSize(new Dimension(310, 150));
                     int size = MainUI.vprog.bgms.size;
                     Array<Integer> bgms = new Array<Integer>();
                     for (int i = 1; i <= size; ++i) {
                         bgms.add(i);
                     }
                     Integer[] bgmsArray = bgms.toArray(Integer.class);
-                    JPanel bgmPanel = new JPanel();
-                    bgmPanel.setAlignmentX(LEFT_ALIGNMENT);
-                    bgmPanel.add(new JLabel("Background Music: ", JLabel.LEFT));
+                    JPanel bgmPanel = new JPanel(new SpringLayout());
+                    bgmPanel.add(new JLabel("Background Music: "));
                     JComboBox comboBox = new JComboBox();
                     int count = 0;
                     for (int i = 0; i < bgmsArray.length; i++) {
@@ -220,7 +207,6 @@ public class ObjectAssetPanel extends JPanel {
                     });
                     bgmPanel.add(comboBox);
                     JButton playBtn = new JButton("Play");
-                    playBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
                     playBtn.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -229,7 +215,6 @@ public class ObjectAssetPanel extends JPanel {
                     });
                     bgmPanel.add(playBtn);
                     JButton stopBtn = new JButton("Stop");
-                    stopBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
                     stopBtn.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -237,19 +222,24 @@ public class ObjectAssetPanel extends JPanel {
                         }
                     });
                     bgmPanel.add(stopBtn);
-                    frame.add(bgmPanel);
+                    
+                    SpringUtilities.makeCompactGrid(bgmPanel,
+                            1, 4, //rows, cols
+                            6, 6, //initX, initY
+                            12, 12);       //xPad, yPad
+                    bgmPanel.setOpaque(true); //content panes must be opaque
+                    frame.setContentPane(bgmPanel);
+                    frame.pack();
 
                 } else if (type.equals("sounds")) {
-                    frame.setSize(new Dimension(400, 75));
                     int size = MainUI.vprog.sounds.size;
                     Array<Integer> sounds = new Array<Integer>();
                     for (int i = 1; i <= size; ++i) {
                         sounds.add(i);
                     }
                     Integer[] soundsArray = sounds.toArray(Integer.class);
-                    JPanel soundPanel = new JPanel();
-                    soundPanel.setAlignmentX(LEFT_ALIGNMENT);
-                    soundPanel.add(new JLabel("Background: ", JLabel.LEFT));
+                    JPanel soundPanel = new JPanel(new SpringLayout());
+                    soundPanel.add(new JLabel("Sound: "));
                     JComboBox comboBox = new JComboBox();
                     int count = 0;
                     for (int i = 0; i < soundsArray.length; i++) {
@@ -262,9 +252,8 @@ public class ObjectAssetPanel extends JPanel {
                         }
                     });
                     soundPanel.add(comboBox);
-                    
+
                     JButton playBtn = new JButton("Play");
-                    playBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
                     playBtn.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -273,7 +262,6 @@ public class ObjectAssetPanel extends JPanel {
                     });
                     soundPanel.add(playBtn);
                     JButton stopBtn = new JButton("Stop");
-                    stopBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
                     stopBtn.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -282,7 +270,6 @@ public class ObjectAssetPanel extends JPanel {
                     });
                     soundPanel.add(stopBtn);
                     JButton jumpBtn = new JButton("Set as Jump FX");
-                    jumpBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
                     jumpBtn.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -291,24 +278,26 @@ public class ObjectAssetPanel extends JPanel {
                     });
                     soundPanel.add(jumpBtn);
                     
-                    frame.add(soundPanel);
+                    SpringUtilities.makeCompactGrid(soundPanel,
+                            1, 5, //rows, cols
+                            6, 6, //initX, initY
+                            12, 12);       //xPad, yPad
+                    soundPanel.setOpaque(true); //content panes must be opaque
+                    frame.setContentPane(soundPanel);
+                    frame.pack();
+                    
                 } else if (type.equals("enemy")) {
-                    frame.setSize(new Dimension(250, 350));
                     final Enemy selectedEnemy = MainUI.vprog.enemies.get(enemyNum);
 
                     // name
-                    JPanel namePanel = new JPanel();
-                    namePanel.setAlignmentX(LEFT_ALIGNMENT);
-                    namePanel.add(new JLabel("Name: ", JLabel.CENTER));
+                    JPanel enemyPanel = new JPanel(new SpringLayout());
+                    enemyPanel.add(new JLabel("Name: "));
                     JTextField name = new JTextField(16);
                     name.setText("Enemy" + String.valueOf(enemyNum + 1));
-                    namePanel.add(name);
-                    frame.add(namePanel);
+                    enemyPanel.add(name);
 
                     // sprite
-                    JPanel spritePanel = new JPanel();
-                    spritePanel.setAlignmentX(LEFT_ALIGNMENT);
-                    spritePanel.add(new JLabel("Sprite: ", JLabel.LEFT));
+                    enemyPanel.add(new JLabel("Sprite: "));
                     String[] spriteList = {"Pacman", "Kisi"};
                     JComboBox comboBox = new JComboBox();
                     int count = 0;
@@ -325,13 +314,10 @@ public class ObjectAssetPanel extends JPanel {
                             }
                         }
                     });
-                    spritePanel.add(comboBox);
-                    frame.add(spritePanel);
+                    enemyPanel.add(comboBox);
 
                     // x pos
-                    JPanel xPanel = new JPanel();
-                    xPanel.setAlignmentX(LEFT_ALIGNMENT);
-                    xPanel.add(new JLabel("Position (X): ", JLabel.LEFT));
+                    enemyPanel.add(new JLabel("Position (X): "));
                     final JTextField x = new JTextField(10);
                     x.setText(String.valueOf((int) selectedEnemy.x));
                     x.addActionListener(new ActionListener() {
@@ -342,13 +328,10 @@ public class ObjectAssetPanel extends JPanel {
                             selectedEnemy.x = Integer.parseInt(x.getText());
                         }
                     });
-                    xPanel.add(x);
-                    frame.add(xPanel);
+                    enemyPanel.add(x);
 
                     // y pos
-                    JPanel yPanel = new JPanel();
-                    yPanel.setAlignmentX(LEFT_ALIGNMENT);
-                    yPanel.add(new JLabel("Position (Y): ", JLabel.LEFT));
+                    enemyPanel.add(new JLabel("Position (Y): "));
                     final JTextField y = new JTextField(10);
                     y.setText(String.valueOf((int) selectedEnemy.y));
                     y.addActionListener(new ActionListener() {
@@ -359,13 +342,10 @@ public class ObjectAssetPanel extends JPanel {
                             selectedEnemy.y = Integer.parseInt(y.getText());
                         }
                     });
-                    yPanel.add(y);
-                    frame.add(yPanel);
+                    enemyPanel.add(y);
 
                     // hSpeed
-                    JPanel hPanel = new JPanel();
-                    hPanel.setAlignmentX(LEFT_ALIGNMENT);
-                    hPanel.add(new JLabel("Move Speed:    ", JLabel.LEFT));
+                    enemyPanel.add(new JLabel("Move Speed: "));
                     final JTextField run = new JTextField(10);
                     run.setText(String.valueOf((int) selectedEnemy.hSpeed));
                     run.addActionListener(new ActionListener() {
@@ -376,16 +356,13 @@ public class ObjectAssetPanel extends JPanel {
                             selectedEnemy.hSpeed = Integer.parseInt(run.getText());
                         }
                     });
-                    hPanel.add(run);
-                    frame.add(hPanel);
+                    enemyPanel.add(run);
 
                     // patrolling
                     final JTextField pp1 = new JTextField(10);
                     final JTextField pp2 = new JTextField(10);
-                    JPanel patPanel = new JPanel();
-                    patPanel.setAlignmentX(LEFT_ALIGNMENT);
-                    patPanel.add(new JLabel("Patrol: ", JLabel.LEFT));
-                    String[] patChoice = {"Patrolling", "Not Patrolling"};
+                    enemyPanel.add(new JLabel("Patrol: "));
+                    String[] patChoice = {"On", "Off"};
                     JComboBox patComboBox = new JComboBox();
                     int patCount = 0;
                     for (int i = 0; i < patChoice.length; i++) {
@@ -415,14 +392,10 @@ public class ObjectAssetPanel extends JPanel {
                         pp1.setEditable(false);
                         pp2.setEditable(false);
                     }
-                    spritePanel.add(patComboBox);
-                    frame.add(patPanel);
+                    enemyPanel.add(patComboBox);
 
                     // pp1
-                    JPanel pp1Panel = new JPanel();
-                    pp1Panel.setAlignmentX(LEFT_ALIGNMENT);
-                    pp1Panel.add(new JLabel("Patrol Point 1: ", JLabel.LEFT));
-                    pp1.setAlignmentX(RIGHT_ALIGNMENT);
+                    enemyPanel.add(new JLabel("Patrol Point 1: "));
                     pp1.setText(String.valueOf((int) selectedEnemy.leftPatPoint));
                     pp1.addActionListener(new ActionListener() {
 
@@ -432,14 +405,10 @@ public class ObjectAssetPanel extends JPanel {
                             selectedEnemy.leftPatPoint = Integer.parseInt(pp1.getText());
                         }
                     });
-                    pp1Panel.add(pp1);
-                    frame.add(pp1Panel);
+                    enemyPanel.add(pp1);
 
-                    // pp1
-                    JPanel pp2Panel = new JPanel();
-                    pp2Panel.setAlignmentX(LEFT_ALIGNMENT);
-                    pp2Panel.add(new JLabel("Patrol Point 2: ", JLabel.LEFT));
-                    pp2.setAlignmentX(RIGHT_ALIGNMENT);
+                    // pp2
+                    enemyPanel.add(new JLabel("Patrol Point 2: "));
                     pp2.setText(String.valueOf((int) selectedEnemy.rightPatPoint));
                     pp2.addActionListener(new ActionListener() {
 
@@ -449,8 +418,15 @@ public class ObjectAssetPanel extends JPanel {
                             selectedEnemy.rightPatPoint = Integer.parseInt(pp2.getText());
                         }
                     });
-                    pp2Panel.add(pp2);
-                    frame.add(pp2Panel);
+                    enemyPanel.add(pp2);
+                    
+                    SpringUtilities.makeCompactGrid(enemyPanel,
+                            8, 2, //rows, cols
+                            6, 6, //initX, initY
+                            12, 12);       //xPad, yPad
+                    enemyPanel.setOpaque(true); //content panes must be opaque
+                    frame.setContentPane(enemyPanel);
+                    frame.pack();
 
                 }
                 frame.setVisible(true);
