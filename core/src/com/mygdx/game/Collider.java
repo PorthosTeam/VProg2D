@@ -71,8 +71,8 @@ public class Collider extends Mover implements Collidable
         collisionFunction = _collisionFunction;
     }
     
-    public void collide(Collider[] colliders)
+    public void collide(Collision[] collisions)
     {
-        collisionFunction.call(this, colliders);
+        collisionFunction.call(this, collisions);
     }
 }

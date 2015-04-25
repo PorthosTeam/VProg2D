@@ -9,7 +9,7 @@ public interface Collidable
     // respond to a collision and adjust its internal state correctly just from
     // having this method called when inside the render() function of
     // VProgEngine.
-    void collide(Collider[] colliders);
+    void collide(Collision[] collisions);
     
     // The idea is that whatever the collision engine is, when it detects that a
     // collision occurs, it invokes this method on every object that was

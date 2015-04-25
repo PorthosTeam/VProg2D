@@ -9,7 +9,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.Texture;
 
-public class Mover extends Doodad implements Movable
+public class Mover extends Doodad implements SimulatableMovable
 {
     public float xSpeed;
     public float ySpeed;
@@ -85,6 +85,16 @@ public class Mover extends Doodad implements Movable
     {
         super(texture);
 	xSpeed = ySpeed = xAccel = yAccel = 0;
+    }
+    
+    public Rectangle simulateMove(float interval_s)
+    {
+        float xSpeed = this.xSpeed + (this.xAccel * interval_s);
+        float ySpeed = this.ySpeed + (this.yAccel * interval_s);
+        return new Rectangle(
+            this.x + (xSpeed * interval_s), this.y + (ySpeed * interval_s),
+            this.width, this.height
+        );
     }
     
     public void move(float interval_s)
