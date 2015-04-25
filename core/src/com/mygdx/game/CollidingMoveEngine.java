@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 // Implements movable so VProgEngine can slap it in with the other Movables.
 public class CollidingMoveEngine implements Movable
 {
+/*
     private class ColliderState
     {
         public float x;
@@ -26,9 +27,12 @@ public class CollidingMoveEngine implements Movable
             yAccel = collider.yAccel;
         }
     }
+*/
     
     private double getLength(Vector2 a, Vector2 b)
     {
+System.out.println("a.x: " + a.x);
+System.out.println("a.x: " + b.x);
         float xPart = a.x + b.x;
         float yPart = a.y + b.y;
         return Math.sqrt((xPart * xPart) + (yPart * yPart));
@@ -122,7 +126,7 @@ public class CollidingMoveEngine implements Movable
         boSs = new Array<BoS>(false, 16);
     }
     
-    public void subscribe(Collider collider)
+    public void register(Collider collider)
     {
         boSs.add(new BoS(collider));
     }
@@ -136,25 +140,25 @@ public class CollidingMoveEngine implements Movable
             return null;
         }
         
-        for(int i = 1; i < len; i += 1)
+        for(int i = 0; i < len; i += 1)
         {
-            BoS boS = boSs.items[i];
+            BoS boS = boSs.get(i);
             boS.lns = new MoveLines(boS.c);
             boS.lns.compute(boS.c.simulateMove(interval_s));
         }
         
-        Vector2[] intersections = new Vector2[4];
+        Vector2[] intersections
+            = { new Vector2(), new Vector2(), new Vector2(), new Vector2()};
         collisions = new Array<CollisionFull>(false, 16);
         for(int i = len - 1; i >= 0; i -= 1)
         {
-            boolean collided = false;
-            BoS boS1 = boSs.items[i];
+            BoS boS1 = boSs.get(i);
             for(int j = 0; j < i; j += 1)
             {
-                BoS boS2 = boSs.items[j];
+                BoS boS2 = boSs.get(j);
                 Vector2 soonest = null;
                 double shortestDistance = Double.POSITIVE_INFINITY;
-                for(int k = 0; k < 4; k += 4)
+                for(int k = 0; k < 4; k += 1)
                 {
                     MoveLine line1 = boS1.lns.lines[k];
                     MoveLine line2 = boS2.lns.lines[k];
@@ -174,7 +178,6 @@ public class CollidingMoveEngine implements Movable
                 {
                     continue;
                 }
-                collided = true;
                 double ratio = shortestDistance / boS1.lns.length;
                 collisions.add(new CollisionFull(
                     interval_s * ratio, soonest, boS1.c, boS2.c
@@ -220,7 +223,7 @@ public class CollidingMoveEngine implements Movable
     {
         for(int i = 0, len = boSs.size; i < len; i += 1)
         {
-            boSs.items[i].c.move(interval_s);
+            boSs.get(i).c.move(interval_s);
         }
     }
 }

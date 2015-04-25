@@ -105,6 +105,10 @@ public class VProgEngine extends ApplicationAdapter {
     Texture img;
 
     Doodad doodad;
+    Mover mover;
+    Collider collider1;
+    Collider collider2;
+    CollidingMoveEngine collisionEngine;
     
     // hook Main UI frame to engine
     Callable callback;
@@ -167,8 +171,16 @@ public class VProgEngine extends ApplicationAdapter {
         // load up data structures after initializing all of them
         this.loadEnginePrefs();
 
-        Doodad.setBatch(batch);
+        Collider.setBatch(batch);
         doodad = new Doodad(50, 50, 50, 50, enemySprites.get(1));
+        mover = new Mover(100, 50, 50, 50, playerSprites.get(2), 20, 20,-1,-1);
+        collider1 = new Collider(50, 50, 50, 50, enemySprites.get(0), 20, 20,
+            new CollisionFunctionBouncy());
+        collider2 = new Collider(50, 250, 50, 50, enemySprites.get(0),
+            20, -20, new CollisionFunctionBouncy());
+        collisionEngine = new CollidingMoveEngine();
+        collisionEngine.register(collider1);
+        collisionEngine.register(collider2);
     }
 
     // set the bgm music
@@ -202,6 +214,7 @@ public class VProgEngine extends ApplicationAdapter {
 
     @Override
     public void render() {
+        float deltaTime_s = Gdx.graphics.getDeltaTime();
         // If manager still has queued assets...
         int queuedAssets = manager.getQueuedAssets();
         if (queuedAssets != 0) {
@@ -252,7 +265,7 @@ public class VProgEngine extends ApplicationAdapter {
                     currEnemy.x, currEnemy.y, currEnemy.width, currEnemy.height, 0, 0,
                     (int) currEnemy.width, (int) currEnemy.height, !currEnemy.left, false);
             if (currEnemy.isPatrolling()) {
-                currEnemy.update(Gdx.graphics.getDeltaTime());
+                currEnemy.update(deltaTime_s);
             }
             // basic collision detection
             if (playerInstance.x >= currEnemy.x - currEnemy.width / 1.25 && playerInstance.x <= currEnemy.x + currEnemy.width / 1.25 && playerInstance.y <= currEnemy.y + currEnemy.height / 1.5) {
@@ -260,15 +273,21 @@ public class VProgEngine extends ApplicationAdapter {
             }
         }
         doodad.draw();
+        mover.draw();
+        collider1.draw();
+        collider2.draw();
         batch.end();
+        
+        mover.move(deltaTime_s);
+        collisionEngine.move(deltaTime_s);
 
         // Player movement at set speed
         if (Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
-            playerInstance.x -= playerInstance.hSpeed * Gdx.graphics.getDeltaTime();
+            playerInstance.x -= playerInstance.hSpeed * deltaTime_s;
             playerInstance.left = true;
         }
         if (Gdx.input.isKeyPressed(Keys.RIGHT) || Gdx.input.isKeyPressed(Keys.D)) {
-            playerInstance.x += playerInstance.hSpeed * Gdx.graphics.getDeltaTime();
+            playerInstance.x += playerInstance.hSpeed * deltaTime_s;
             playerInstance.left = false;
         }
 
@@ -283,13 +302,13 @@ public class VProgEngine extends ApplicationAdapter {
             }
         }
         if (playerInstance.jumping && !playerInstance.jumpDone) {
-            playerInstance.y += playerInstance.vSpeed * Gdx.graphics.getDeltaTime();
+            playerInstance.y += playerInstance.vSpeed * deltaTime_s;
         }
         if (playerInstance.y >= playerInstance.jumpHeight) {
             playerInstance.jumpDone = true;
         }
         if (playerInstance.y > ground && playerInstance.jumpDone) {
-            playerInstance.y -= playerInstance.vSpeed * Gdx.graphics.getDeltaTime();
+            playerInstance.y -= playerInstance.vSpeed * deltaTime_s;
         }
         if (playerInstance.y <= ground && playerInstance.jumping) {
             playerInstance.y = ground;
