@@ -10,6 +10,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mygdx.game.VProgEngine;
 import com.mygdx.game.Enemy;
+import com.mygdx.game.Player;
 
 // This is for the graphical user interface.
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
@@ -282,7 +285,7 @@ public class MainUI implements Callable {
         JPanel objectsAddPanel = new JPanel();
         objectsAddPanel.setLayout(new BoxLayout(objectsAddPanel, BoxLayout.PAGE_AXIS)
         );
-        objectsAddPanel.setPreferredSize(new Dimension(230, 0));
+        objectsAddPanel.setPreferredSize(new Dimension(200, 0));
 
         JButton objectsAddButton
                 = new JButton("Add New Object", new ImageIcon("uploadAsset.png"));
@@ -292,11 +295,11 @@ public class MainUI implements Callable {
         objectsAddPanel2 = new JPanel();
         objectsAddPanel2.setLayout(new BoxLayout(objectsAddPanel2, BoxLayout.PAGE_AXIS)
         );
-        objectsAddPanel2.setMaximumSize(new Dimension(220, 0));
+        objectsAddPanel2.setMaximumSize(new Dimension(200, 0));
         objectsAddPanel2.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
         JScrollPane objectsScrollPane = new JScrollPane(objectsAddPanel2);
-        objectsScrollPane.setPreferredSize(new Dimension(220, 0));
+        objectsScrollPane.setPreferredSize(new Dimension(200, 0));
         objectsScrollPane.setHorizontalScrollBarPolicy(
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         objectsScrollPane.setVerticalScrollBarPolicy(
@@ -406,10 +409,13 @@ public class MainUI implements Callable {
         // loading finished signal
         if (((String) argv[0]).equals("load")) {
             System.out.println("called");
-            for (enemyCount = 1; enemyCount < vprog.enemies.size; enemyCount++) {
+            objectsAddPanel2.add(new ObjectAssetPanel("Player"));
+            objectsAddPanel2.add(new ObjectAssetPanel("Background"));
+            for (enemyCount = 1; enemyCount <= vprog.enemies.size; enemyCount++) {
                 ObjectAssetPanel o = new ObjectAssetPanel("Enemy" + String.valueOf(enemyCount));
                 objectsAddPanel2.add(o);
             }
+            
         }
         redrawMainUI();
         return null;
