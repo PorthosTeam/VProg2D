@@ -66,9 +66,9 @@ public class VProgEngine extends ApplicationAdapter {
     public QueuedAssetChaperone queuedAssetChaperone;
 
     // Game assets
-    private Array<Texture> backgrounds;
-    private Array<Texture> playerSprites;
-    private Array<Texture> enemySprites;
+    public Array<Texture> backgrounds;
+    public Array<Texture> playerSprites;
+    public Array<Texture> enemySprites;
 
     // Player
     public Player playerInstance;
@@ -138,7 +138,7 @@ public class VProgEngine extends ApplicationAdapter {
         backgrounds.add(new Texture(Gdx.files.internal("bg2.png")));
         backgrounds.add(new Texture(Gdx.files.internal("bg3.png")));
         backgrounds.add(new Texture(Gdx.files.internal("bg4.png")));
-        //backgrounds.add(new Texture(Gdx.files.internal("bg5.png")));
+        backgrounds.add(new Texture(Gdx.files.internal("bg5.png")));
         sounds = new Array<Sound>();
         sounds.add(Gdx.audio.newSound(Gdx.files.internal("jump.wav")));
         sounds.add(Gdx.audio.newSound(Gdx.files.internal("damaged.ogg")));
@@ -499,7 +499,7 @@ public class VProgEngine extends ApplicationAdapter {
         prefs.putString("Enemy" + String.valueOf(enemies.size), String.valueOf(etype) + ";" + String.valueOf(pos) + ";" + String.valueOf(ground) + ";" + String.valueOf(pp1) + ";" + String.valueOf(pp2) + ";" + String.valueOf(pat) + ";" + String.valueOf(speed));
         saveEnginePrefs();
         // return index of added enemy
-        return enemies.size;
+        return enemies.size - 1;
     }
     
     // save the scene (enemies, player, and background atm)
