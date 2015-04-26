@@ -103,12 +103,6 @@ public class VProgEngine extends ApplicationAdapter {
     public int rightBound = WIDTH;
     SpriteBatch batch;
     Texture img;
-
-    Doodad doodad;
-    Mover mover;
-    Collider collider1;
-    Collider collider2;
-    CollidingMoveEngine collisionEngine;
     
     // hook Main UI frame to engine
     Callable callback;
@@ -170,17 +164,6 @@ public class VProgEngine extends ApplicationAdapter {
         
         // load up data structures after initializing all of them
         this.loadEnginePrefs();
-
-        Collider.setBatch(batch);
-        doodad = new Doodad(50, 50, 50, 50, enemySprites.get(1));
-        mover = new Mover(100, 50, 50, 50, playerSprites.get(2), 20, 20,-1,-1);
-        collider1 = new Collider(50, 50, 50, 50, enemySprites.get(0), 20, 20,
-            new CollisionFunctionBouncy());
-        collider2 = new Collider(50, 250, 50, 50, enemySprites.get(0),
-            20, -20, new CollisionFunctionBouncy());
-        collisionEngine = new CollidingMoveEngine();
-        collisionEngine.register(collider1);
-        collisionEngine.register(collider2);
     }
 
     // set the bgm music
@@ -272,15 +255,8 @@ public class VProgEngine extends ApplicationAdapter {
                 text.draw(batch, "OW", WIDTH / 2, HEIGHT / 1.25f);
             }
         }
-        doodad.draw();
-        mover.draw();
-        collider1.draw();
-        collider2.draw();
         batch.end();
         
-        mover.move(deltaTime_s);
-        collisionEngine.move(deltaTime_s);
-
         // Player movement at set speed
         if (Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.A)) {
             playerInstance.x -= playerInstance.hSpeed * deltaTime_s;
