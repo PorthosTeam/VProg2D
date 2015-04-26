@@ -8,36 +8,24 @@ import com.badlogic.gdx.math.Rectangle;
 // Implements movable so VProgEngine can slap it in with the other Movables.
 public class CollidingMoveEngine implements Movable
 {
-/*
-    private class ColliderState
-    {
-        public float x;
-        public float y;
-        public float xSpeed;
-        public float ySpeed;
-        public float xAccel;
-        public float yAccel;
-        public ColliderState(Collider collider)
-        {
-            x = collider.x;
-            y = collider.y;
-            xSpeed = collider.xSpeed;
-            ySpeed = collider.ySpeed;
-            xAccel = collider.xAccel;
-            yAccel = collider.yAccel;
-        }
-    }
-*/
-    
     private double getLength(Vector2 a, Vector2 b)
     {
-System.out.println("a.x: " + a.x);
-System.out.println("a.x: " + b.x);
         float xPart = a.x + b.x;
         float yPart = a.y + b.y;
         return Math.sqrt((xPart * xPart) + (yPart * yPart));
-    }    
-
+    }
+    
+    private class BorderLine
+    {
+        public Vector2 a;
+        public Vector2 b;
+        public BorderLine(float a_x, float a_y, float b_x, float b_y)
+        {
+            a = new Vector2(a_x, a_y);
+            b = new Vector2(b_x, b_y);
+        }
+    }
+    
     private class MoveLine
     {
         public Vector2 a;
@@ -49,6 +37,26 @@ System.out.println("a.x: " + b.x);
         public void compute(float x, float y)
         {
             b = new Vector2(x, y);
+        }
+    }
+    
+    private class BorderLines
+    {
+        public BorderLine[] lines = new BorderLine[4];
+        public BorderLines(Rectangle rectangle)
+        {
+            lines[0] = new BorderLine(rectangle.x, rectangle.y,
+                rectangle.x + rectangle.width, rectangle.y);
+            lines[1] = new BorderLine(rectangle.x, rectangle.y,
+                rectangle.x, rectangle.y + rectangle.height);
+            lines[2] = new BorderLine(
+                rectangle.x + rectangle.width, rectangle.y,
+                rectangle.x + rectangle.width, rectangle.y + rectangle.height
+            );
+            lines[3] = new BorderLine(
+                rectangle.x, rectangle.y + rectangle.height,
+                rectangle.x + rectangle.width, rectangle.y + rectangle.height
+            );
         }
     }
     
@@ -78,6 +86,7 @@ System.out.println("a.x: " + b.x);
     {
         public Collider c;
         public MoveLines lns;
+        public BorderLines brd;
         public BoS(Collider _c)
         {
             c = _c;
@@ -131,7 +140,34 @@ System.out.println("a.x: " + b.x);
         boSs.add(new BoS(collider));
     }
     
-    private CollisionFull computeCollisions(float interval_s)
+    Vector2 tempIntersection = new Vector2();
+    private double checkForCollision(BoS boS1, BoS boS2, Vector2 coordinates)
+    {
+        double shortestDistance = Double.POSITIVE_INFINITY;
+        for(int k1 = 0; k1 < 4; k1 += 1)
+        {
+            MoveLine line1 = boS1.lns.lines[k1];
+            for(int k2 = 0; k2 < 4; k2 += 1)
+            {
+                BorderLine line2 = boS2.brd.lines[k2];
+                if(Intersector.intersectSegments(line1.a, line1.b,
+                    line2.a, line2.b, tempIntersection)
+                )
+                {
+                    double distance = getLength(line1.a, tempIntersection);
+                    if(distance < shortestDistance)
+                    {
+                        shortestDistance = distance;
+                        coordinates.x = tempIntersection.x;
+                        coordinates.y = tempIntersection.y;
+                    }
+                }
+            }
+        }    
+        return shortestDistance;
+    }
+    
+    private CollisionFull getCollisions(float interval_s)
     {
         Array<CollisionFull> collisions;
         int len = boSs.size;
@@ -144,43 +180,36 @@ System.out.println("a.x: " + b.x);
         {
             BoS boS = boSs.get(i);
             boS.lns = new MoveLines(boS.c);
+            boS.brd = new BorderLines(boS.c);
             boS.lns.compute(boS.c.simulateMove(interval_s));
         }
         
-        Vector2[] intersections
-            = { new Vector2(), new Vector2(), new Vector2(), new Vector2()};
         collisions = new Array<CollisionFull>(false, 16);
+/*
         for(int i = len - 1; i >= 0; i -= 1)
         {
             BoS boS1 = boSs.get(i);
             for(int j = 0; j < i; j += 1)
+*/
+        for(int i = 0; i < len; i += 1)
+        {
+            BoS boS1 = boSs.get(i);
+            for(int j = 0; j < len; j += 1)
             {
-                BoS boS2 = boSs.get(j);
-                Vector2 soonest = null;
-                double shortestDistance = Double.POSITIVE_INFINITY;
-                for(int k = 0; k < 4; k += 1)
-                {
-                    MoveLine line1 = boS1.lns.lines[k];
-                    MoveLine line2 = boS2.lns.lines[k];
-                    if(Intersector.intersectSegments(line1.a, line1.b,
-                        line2.a, line2.b, intersections[k])
-                    )
-                    {
-                        double distance = getLength(line1.a, intersections[k]);
-                        if(distance < shortestDistance)
-                        {
-                            shortestDistance = distance;
-                            soonest = intersections[k];
-                        }
-                    }
-                }    
-                if(soonest == null)
+                if(i == j)
                 {
                     continue;
                 }
-                double ratio = shortestDistance / boS1.lns.length;
+                BoS boS2 = boSs.get(j);
+                Vector2 coordinates = new Vector2();
+                double distance = checkForCollision(boS1, boS2, coordinates);
+                if(distance == Double.POSITIVE_INFINITY)
+                {
+                    continue;
+                }
+                double ratio = distance / boS1.lns.length;
                 collisions.add(new CollisionFull(
-                    interval_s * ratio, soonest, boS1.c, boS2.c
+                    interval_s * ratio, coordinates, boS1.c, boS2.c
                 ));
             }
         }
@@ -204,20 +233,32 @@ System.out.println("a.x: " + b.x);
         float timeLeft_s = interval_s;
         CollisionFull collisionFull;
         // Some day I'd like to support multiple collisions at once, but right
-        // now it's all actually just one collision.
+        // now it's all actually only one collision per collider per step.
         Collision[] collision = new Collision[1];
-        while((collisionFull = computeCollisions(timeLeft_s)) != null)
+        while((collisionFull = getCollisions(timeLeft_s)) != null)
         {
             float timeToCollision_s = (float )collisionFull.interval_s;
             timeLeft_s -= timeToCollision_s;
             actuallyMove(timeToCollision_s);
-            collision[0] = collisionFull.collisions[1];
-            collisionFull.collisions[0].collider.collide(collision);
-            collision[0] = collisionFull.collisions[0];
-            collisionFull.collisions[1].collider.collide(collision);
+            Collision[] collisions = collisionFull.collisions;
+            // Don't want to change good interface now to make less good
+            // implementation neater, so doing this kludgery with a single
+            // array argument...
+            collision[0] = collisions[1];
+            Collider collisionResult
+                = (Collider )collisions[0].collider.simulateCollide(collision);
+            collision[0] = collisions[0];
+            collisions[1].collider.collide(collision);
+            collisions[0].collider.commitCollide(collisionResult);
         }
         actuallyMove(timeLeft_s);
     }
+
+public void debugPrint(Collider c)
+{
+ System.out.println("x: " + c.x + " y: " + c.y + " xS: " + c.xSpeed
+  + " yS: " + c.ySpeed + " xA: " + c.xAccel + " yA: " + c.yAccel);
+}
     
     public void actuallyMove(float interval_s)
     {

@@ -104,10 +104,7 @@ public class VProgEngine extends ApplicationAdapter {
     SpriteBatch batch;
     Texture img;
 
-    Doodad doodad;
-    Mover mover;
-    Collider collider1;
-    Collider collider2;
+    Array<Drawable> drawables = new Array<Drawable>(false, 16);
     CollidingMoveEngine collisionEngine;
     
     // hook Main UI frame to engine
@@ -172,15 +169,16 @@ public class VProgEngine extends ApplicationAdapter {
         this.loadEnginePrefs();
 
         Collider.setBatch(batch);
-        doodad = new Doodad(50, 50, 50, 50, enemySprites.get(1));
-        mover = new Mover(100, 50, 50, 50, playerSprites.get(2), 20, 20,-1,-1);
-        collider1 = new Collider(50, 50, 50, 50, enemySprites.get(0), 20, 20,
-            new CollisionFunctionBouncy());
-        collider2 = new Collider(50, 250, 50, 50, enemySprites.get(0),
-            20, -20, new CollisionFunctionBouncy());
+        Collider collider1 = new Collider(50, 50, 50, 50, enemySprites.get(0),
+            20, 20, new CollisionFunctionBouncy());
+        Collider collider2 = new Collider(250, 250, 50, 50, enemySprites.get(0),
+            -20, -20, new CollisionFunctionBouncy());
         collisionEngine = new CollidingMoveEngine();
-        collisionEngine.register(collider1);
         collisionEngine.register(collider2);
+        collisionEngine.register(collider1);
+        
+        drawables.add(collider1);
+        drawables.add(collider2);
     }
 
     // set the bgm music
@@ -272,13 +270,12 @@ public class VProgEngine extends ApplicationAdapter {
                 text.draw(batch, "OW", WIDTH / 2, HEIGHT / 1.25f);
             }
         }
-        doodad.draw();
-        mover.draw();
-        collider1.draw();
-        collider2.draw();
+        for(int i = 0, len = drawables.size; i < len; i += 1)
+        {
+            drawables.get(i).draw();
+        }
         batch.end();
         
-        mover.move(deltaTime_s);
         collisionEngine.move(deltaTime_s);
 
         // Player movement at set speed
